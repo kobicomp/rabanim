@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בית הרבנים - חדר מבואה</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            background-image: url('https://cdnjs.cloudflare.com/ajax/libs/simple-icons/3.0.1/simple-icons.svg');
+            background-size: 300px;
+            background-opacity: 0.1;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #3a6b35;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-bottom: 5px solid #264d20;
+            position: relative;
+            overflow: hidden;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .roof {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-color: #8B4513;
+            clip-path: polygon(0% 100%, 50% 0%, 100% 100%);
+            z-index: 1;
+        }
+        
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+        
+        .welcome-message {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px solid #ddd;
+            position: relative;
+        }
+        
+        .welcome-message::before {
+            content: "";
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background-color: #8B4513;
+            border-radius: 15px 15px 0 0;
+            z-index: -1;
+        }
+        
+        .welcome-message h2 {
+            color: #3a6b35;
+            margin-top: 0;
+            font-size: 1.8rem;
+        }
+        
+        .home-layout {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .floor-title {
+            grid-column: 1 / -1;
+            background-color: #8B4513;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin: 20px 0 10px 0;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+        }
+        
+        .floor-title i {
+            margin-left: 10px;
+            font-size: 1.3em;
+        }
+        
+        .room-card {
+            background-color: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+        
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .room-header {
+            position: relative;
+            padding: 15px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: white;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 3px solid rgba(0,0,0,0.1);
+        }
+        
+        .door-handle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 10px;
+            height: 10px;
+            background-color: gold;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.3);
+        }
+        
+        .room-content {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f9f9f9;
+        }
+        
+        .room-description {
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        
+        .room-link {
+            background-color: #3a6b35;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: inline-block;
+            text-align: center;
+            transition: background-color 0.3s;
+            font-weight: bold;
+            margin-top: auto;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .room-link:hover {
+            background-color: #264d20;
+        }
+        
+        .room-link::after {
+            content: "";
+            position: absolute;
+            left: -20%;
+            top: -50%;
+            width: 140%;
+            height: 200%;
+            background-color: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            transition: transform 0.5s;
+            z-index: -1;
+        }
+        
+        .room-link:hover::after {
+            transform: rotate(30deg) translateX(10%);
+        }
+        
+        .announcements {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            position: relative;
+            border: 2px solid #ddd;
+        }
+        
+        .announcements::before {
+            content: "";
+            position: absolute;
+            top: -8px;
+            left: 30px;
+            right: 30px;
+            height: 15px;
+            background-color: #8B4513;
+            border-radius: 7px;
+        }
+        
+        .announcements h2 {
+            color: #3a6b35;
+            border-bottom: 2px solid #3a6b35;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .announcement-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e2e8f0;
+            position: relative;
+            padding-right: 20px;
+        }
+        
+        .announcement-item::before {
+            content: "📌";
+            position: absolute;
+            right: 0;
+            top: 5px;
+        }
+        
+        .announcement-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .announcement-date {
+            font-size: 0.9rem;
+            color: #718096;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        footer {
+            background-color: #3a6b35;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+        
+        .foundation {
+            height: 15px;
+            background-color: #8B4513;
+            position: absolute;
+            bottom: -15px;
+            left: 0;
+            right: 0;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+        }
+        
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* חלונות קטנים לצד החדרים */
+        .window {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.7);
+            border: 2px solid rgba(0,0,0,0.1);
+            top: 10px;
+            left: 10px;
+            border-radius: 5px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 4px;
+            padding: 4px;
+        }
+        
+        .window-pane {
+            background-color: rgba(135, 206, 250, 0.6);
+            border-radius: 2px;
+        }
+        
+        @media (max-width: 768px) {
+            .home-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+        
+        /* מגוון צבעים לחדרים השונים */
+        .aktualia { background-color: #4299e1; }
+        .arachim { background-color: #805ad5; }
+        .safa { background-color: #dd6b20; }
+        .pniney { background-color: #38a169; }
+        .hatzama { background-color: #e53e3e; }
+        .etgar { background-color: #d69e2e; }
+        .yetzira { background-color: #667eea; }
+        .shlichut { background-color: #9f7aea; }
+        
+        /* אייקונים מיוחדים */
+        .icon-container {
+            margin-right: 10px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .floor-icons {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <h1>בית הרבנים</h1>
+            <div class="subtitle">מרכז משאבים וכלים עבור רבני בית ספר</div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="welcome-message">
+            <h2>ברוכים הבאים לבית הרבנים</h2>
+            <p>בית הרבנים הוא מרכז משאבים וירטואלי המיועד לרבני בתי ספר. כאן תוכלו למצוא מגוון רחב של חדרים תוכניים, כל אחד מכיל אוצר של חומרים, רעיונות וכלים לעבודתכם החינוכית.</p>
+            <p>היכנסו לחדרים השונים בבית ותוכלו להתרשם מהתכנים המגוונים שהוכנו במיוחד עבורכם.</p>
+        </div>
+        
+        <div class="announcements">
+            <h2>לוח מודעות הבית</h2>
+            <div class="announcement-item">
+                <div class="announcement-date">כ"ב אייר תשפ"ה | 12.05.2025</div>
+                <h3>ברוכים הבאים לבית החדש!</h3>
+                <p>אנו שמחים לארח אתכם בבית הרבנים החדש. הבית יתעדכן באופן שוטף עם תכנים חדשים ורלוונטיים בכל החדרים.</p>
+            </div>
+            <div class="announcement-item">
+                <div class="announcement-date">כ"א אייר תשפ"ה | 11.05.2025</div>
+                <h3>הכנות לחג השבועות</h3>
+                <p>בחדר "יצירה והעשרה" עלו חומרים חדשים לקראת חג השבועות, כולל מערכי שיעור, רעיונות לפעילויות ודפי עבודה.</p>
+            </div>
+            <div class="announcement-item">
+                <div class="announcement-date">י"ט אייר תשפ"ה | 09.05.2025</div>
+                <h3>פורום שאלות ותשובות</h3>
+                <p>נפתח פורום חדש בחדר "העצמה וכלים לחיים" המאפשר לשאול שאלות ולקבל תשובות מעמיתים ומומחים בתחום החינוך היהודי.</p>
+            </div>
+        </div>
+        
+        <div class="home-layout">
+            <div class="floor-title">
+                <span class="floor-icons">🏫</span>
+                <span>קומת הלימוד והתוכן</span>
+            </div>
+            
+            <div class="room-card">
+                <div class="room-header aktualia">
+                    אקטואליה
+                    <div class="door-handle"></div>
+                    <div class="window">
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <div class="room-description">
+                        <p>חדר זה מחבר בין פרשת השבוע לאירועים אקטואליים, מאמרים על סוגיות חברתיות עכשוויות וניתוחים של אירועים מנקודת מבט יהודית.</p>
+                    </div>
+                    <a href="#" class="room-link">כניסה לחדר</a>
+                </div>
+            </div>
+            
+            <div class="room-card">
+                <div class="room-header arachim">
+                    ערכים
+                    <div class="door-handle"></div>
+                    <div class="window">
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <div class="room-description">
+                        <p>חדר המכיל מאגר שיעורים על ערכים יהודיים, פעילויות כיתתיות להמחשת ערכים וחומרים לעבודה על מידות טובות.</p>
+                    </div>
+                    <a href="#" class="room-link">כניסה לחדר</a>
+                </div>
+            </div>
+            
+            <div class="room-card">
+                <div class="room-header safa">
+                    שפה
+                    <div class="door-handle"></div>
+                    <div class="window">
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <div class="room-description">
+                        <p>חדר זה מכיל מילון מונחים יהודיים, משחקי לשון הקשורים למקורות ועזרים להוראת ביטויים, מושגים ופתגמים מהמסורת.</p>
+                    </div>
+                    <a href="#" class="room-link">כניסה לחדר</a>
+                </div>
+            </div>
+            
+            <div class="floor-title">
+                <span class="floor-icons">📚</span>
+                <span>קומת החוכמה והמשאבים</span>
+            </div>
+            
+            <div class="room-card">
+                <div class="room-header pniney">
+                    פניני חוכמה
+                    <div class="door-handle"></div>
+                    <div class="window">
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <div class="room-description">
+                        <p>חדר האוסף אמרות חז"ל, סיפורים קצרים עם מסרים חינוכיים ודיונים על פרשנויות שונות לטקסטים קלאסיים.</p>
+                    </div>
+                    <a href="#" class="room-link">כניסה לחדר</a>
+                </div>
+            </div>
+            
+            <div class="room-card">
+                <div class="room-header hatzama">
+                    העצמה וכלים לחיים
+                    <div class="door-handle"></div>
+                    <div class="window">
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <div class="room-description">
+                        <p>חדר המציע כלים להתמודדות עם אתגרים חינוכיים, סדנאות לפיתוח מקצועי ומאמרים על טכניקות הוראה חדשניות.</p>
+                    </div>
+                    <a href="#" class="room-link">כניסה לחדר</a>
+                </div>
+            </div>
+            
+            <div class="room-card">
+                <div class="room-header etgar">
+                    אתגר הפרשה ומשימת השבוע
+                    <div class="door-handle"></div>
+                    <div class="window">
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <div class="room-description">
+                        <p>חדר המספק משימות שבועיות לתלמידים הקשורות לפרשת השבוע, חידונים אינטראקטיביים ופרויקטים קבוצתיים.</p>
+                    </div>
+                    <a href="#" class="room-link">כניסה לחדר</a>
+                </div>
+            </div>
+            
+            <div class="floor-title">
+                <span class="floor-icons">🎨</span>
+                <span>קומת היצירה והפעילות</span>
+            </div>
+            
+            <div class="room-card">
+                <div class="room-header yetzira">
+                    יצירה והעשרה
+                    <div class="door-handle"></div>
+                    <div class="window">
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <div class="room-description">
+                        <p>חדר המכיל מערכי שיעור יצירתיים, סדנאות אומנות בהשראת מקורות יהודיים ורעיונות לפרויקטים לחגים ומועדים.</p>
+                    </div>
+                    <a href="#" class="room-link">כניסה לחדר</a>
+                </div>
+            </div>
+            
+            <div class="room-card">
+                <div class="room-header shlichut">
+                    שליחות
+                    <div class="door-handle"></div>
+                    <div class="window">
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                        <div class="window-pane"></div>
+                    </div>
+                </div>
+                <div class="room-content">
+                    <div class="room-description">
+                        <p>חדר המרכז מידע על פרויקטים של תיקון עולם, יוזמות קהילתיות וסיפורי השראה על שליחות חינוכית במסגרת בית הספר.</p>
+                    </div>
+                    <a href="#" class="room-link">כניסה לחדר</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="copyright">
+                © 2025 בית הרבנים | כל הזכויות שמורות
+            </div>
+            <div class="footer-links">
+                <a href="#">אודות הבית</a>
+                <a href="#">צור קשר</a>
+                <a href="#">מדיניות פרטיות</a>
+                <a href="#">תנאי שימוש</a>
+            </div>
+        </div>
+        <div class="foundation"></div>
+    </footer>
+</body>
+</html>

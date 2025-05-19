@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>הוספת דבר תורה חדש</title>
+    <style>
+        :root {
+            --primary-color: #3f51b5;
+            --accent-color: #ff9800;
+            --bg-color: #f8f9fa;
+            --text-color: #333;
+            --header-bg: #f0f4f8;
+            --footer-bg: #e1e5eb;
+            --border-color: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px 15px;
+        }
+        
+        header {
+            background-color: var(--header-bg);
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+        }
+        
+        textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        select {
+            height: 40px;
+            background-color: white;
+        }
+        
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            width: 100%;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-submit:hover {
+            background-color: #303f9f;
+        }
+        
+        .status-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .status-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            form {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>הוספת דבר תורה חדש</h1>
+            <p>הזן את המידע הדרוש להוספת דבר תורה חדש למאגר</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <form id="torahSubmissionForm" action="https://docs.google.com/forms/d/e/1FAIpQLSec6bCAxAEF76IsySRadE-6dptEIYbPLbCZ7__C7e0hWDKUAQ/formResponse" method="post" target="hidden-iframe">
+            <div class="form-group">
+                <label for="parasha">פרשה *</label>
+                <select id="parasha" name="entry.1747356093" required>
+                    <option value="">בחר פרשה...</option>
+                    <option value="בראשית">בראשית</option>
+                    <option value="נח">נח</option>
+                    <option value="לך לך">לך לך</option>
+                    <option value="וירא">וירא</option>
+                    <option value="חיי שרה">חיי שרה</option>
+                    <option value="תולדות">תולדות</option>
+                    <option value="ויצא">ויצא</option>
+                    <option value="וישלח">וישלח</option>
+                    <option value="וישב">וישב</option>
+                    <option value="מקץ">מקץ</option>
+                    <option value="ויגש">ויגש</option>
+                    <option value="ויחי">ויחי</option>
+                    <option value="שמות">שמות</option>
+                    <option value="וארא">וארא</option>
+                    <option value="בא">בא</option>
+                    <option value="בשלח">בשלח</option>
+                    <option value="יתרו">יתרו</option>
+                    <option value="משפטים">משפטים</option>
+                    <option value="תרומה">תרומה</option>
+                    <option value="תצוה">תצוה</option>
+                    <option value="כי תשא">כי תשא</option>
+                    <option value="ויקהל">ויקהל</option>
+                    <option value="פקודי">פקודי</option>
+                    <option value="ויקרא">ויקרא</option>
+                    <option value="צו">צו</option>
+                    <option value="שמיני">שמיני</option>
+                    <option value="תזריע">תזריע</option>
+                    <option value="מצורע">מצורע</option>
+                    <option value="אחרי מות">אחרי מות</option>
+                    <option value="קדושים">קדושים</option>
+                    <option value="אמור">אמור</option>
+                    <option value="בהר">בהר</option>
+                    <option value="בחוקותי">בחוקותי</option>
+                    <option value="במדבר">במדבר</option>
+                    <option value="נשא">נשא</option>
+                    <option value="בהעלותך">בהעלותך</option>
+                    <option value="שלח">שלח</option>
+                    <option value="קרח">קרח</option>
+                    <option value="חקת">חקת</option>
+                    <option value="בלק">בלק</option>
+                    <option value="פינחס">פינחס</option>
+                    <option value="מטות">מטות</option>
+                    <option value="מסעי">מסעי</option>
+                    <option value="דברים">דברים</option>
+                    <option value="ואתחנן">ואתחנן</option>
+                    <option value="עקב">עקב</option>
+                    <option value="ראה">ראה</option>
+                    <option value="שופטים">שופטים</option>
+                    <option value="כי תצא">כי תצא</option>
+                    <option value="כי תבוא">כי תבוא</option>
+                    <option value="ניצבים">ניצבים</option>
+                    <option value="וילך">וילך</option>
+                    <option value="האזינו">האזינו</option>
+                    <option value="וזאת הברכה">וזאת הברכה</option>
+                    <!-- פרשות כפולות -->
+                    <option value="ויקהל-פקודי">ויקהל-פקודי</option>
+                    <option value="תזריע-מצורע">תזריע-מצורע</option>
+                    <option value="אחרי מות-קדושים">אחרי מות-קדושים</option>
+                    <option value="בהר-בחוקותי">בהר-בחוקותי</option>
+                    <option value="חקת-בלק">חקת-בלק</option>
+                    <option value="מטות-מסעי">מטות-מסעי</option>
+                    <option value="ניצבים-וילך">ניצבים-וילך</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="title">כותרת *</label>
+                <input type="text" id="title" name="entry.2084429264" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">תוכן *</label>
+                <textarea id="content" name="entry.177859311" required></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="author">שם הכותב *</label>
+                <input type="text" id="author" name="entry.386950228" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="year">שנה</label>
+                <input type="text" id="year" name="entry.982084268" placeholder="למשל: תשפ״ד">
+            </div>
+            
+            <div class="form-group">
+                <label for="category">קטגוריה *</label>
+                <select id="category" name="entry.2000375306" required>
+                    <option value="">בחר קטגוריה...</option>
+                    <option value="דבר תורה">דבר תורה</option>
+                    <option value="דבר המפקח הארצי">דבר המפקח הארצי</option>
+                    <option value="אקטואליה">אקטואליה</option>
+                    <option value="ערכים">ערכים</option>
+                    <option value="שפה">שפה</option>
+                    <option value="פניני חוכמה">פניני חוכמה</option>
+                    <option value="העצמה וכלים לחיים">העצמה וכלים לחיים</option>
+                    <option value="אתגר הפרשה">אתגר הפרשה</option>
+                    <option value="יצירה">יצירה</option>
+                    <option value="שליחות">שליחות</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn-submit">שלח דבר תורה</button>
+            </div>
+            
+            <div id="statusMessage" class="status-message"></div>
+        </form>
+        
+        <iframe name="hidden-iframe" style="display:none;"></iframe>
+        
+        <footer>
+            <p>© כל הזכויות שמורות לבית הספר - 2025</p>
+            <p><a href="index.html">חזרה לדף הראשי</a></p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // מילוי שנה נוכחית כברירת מחדל
+            const currentHebrewYear = getHebrewYear();
+            document.getElementById('year').value = currentHebrewYear;
+            
+            // הגדרת תאריך העדכון הנוכחי כברירת מחדל (נשלח אוטומטית על ידי הטופס)
+            
+            // טיפול בשליחת הטופס
+            const form = document.getElementById('torahSubmissionForm');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            form.addEventListener('submit', function(e) {
+                // בדיקת תקינות הטופס
+                if (!form.checkValidity()) {
+                    e.preventDefault();
+                    statusMessage.textContent = 'אנא מלא את כל השדות המסומנים ב-*';
+                    statusMessage.className = 'status-message status-error';
+                    statusMessage.style.display = 'block';
+                    return;
+                }
+                
+                // אם הטופס תקין
+                // הטופס נשלח ל-iframe מוסתר
+                setTimeout(function() {
+                    statusMessage.textContent = 'דבר התורה נשלח בהצלחה!';
+                    statusMessage.className = 'status-message status-success';
+                    statusMessage.style.display = 'block';
+                    
+                    // איפוס הטופס
+                    form.reset();
+                    document.getElementById('year').value = currentHebrewYear;
+                    
+                    // גלילה לראש הדף
+                    window.scrollTo(0, 0);
+                }, 1000);
+            });
+        });
+        
+        // פונקציה לחישוב השנה העברית הנוכחית
+        function getHebrewYear() {
+            // אפשר לקבל את השנה העברית בקריאה לשירות חיצוני
+            // אבל בינתיים נחזיר ערך סטטי עבור תשפ״ד
+            return "תשפ״ד";
+        }
+    </script>
+</body>
+</html>

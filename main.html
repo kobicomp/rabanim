@@ -433,7 +433,7 @@
     <script>
         // ========== הגדרות שיש לעדכן ==========
         // קישור לגיליון הנתונים (שנה קישור זה כשצריך)
-        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSuqfhHb4HdLcP3WLMT33O61cP_5bQrryiZ-qVSPiAfQNaWCi32iNePVcOdFM7faykcbUX-FpoTuYdE/pub?output=csv';
+        const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSL99eQJihGXzNWteo5ZxrfkMFme2u4_GilpBrq3I1dUhO8iTAz4DhZv_v6I4JgxZ034KTSLuIHAiFD/pub?output=csv';
         // ========================================
 
         // משתנה גלובלי לשמירת הקטגוריה הפעילה
@@ -693,7 +693,7 @@
             }
         }
 
-      // פונקציה לטעינת התוכן מגוגל שיטס - מעודכנת לטיפול בקטגוריות
+        // פונקציה לטעינת התוכן מגוגל שיטס - מעודכנת לטיפול בקטגוריות ואינדקסים חדשים
         async function loadParashaContent(parashaName = null, category = null) {
             try {
                 // אם נבחרה קטגוריה חדשה, עדכן את הקטגוריה הפעילה
@@ -759,20 +759,23 @@
                     console.log(`מחפש תוכן עבור פרשת ${searchParasha}`);
 
                     // סינון תוצאות עבור פרשה נוכחית וקטגוריה נוכחית
+                    // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
+                    // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
                     const results = rows.filter(row => {
-                        if (row.length <= 7) return false; // ודא שיש מספיק עמודות (כולל עמודת הקטגוריה)
+                        if (row.length < 9) return false; // ודא שיש מספיק עמודות (כולל עמודת הזמינות)
 
-                        // ודא שהרשומה זמינה
+                        // ודא שהרשומה זמינה (עמודה I - אינדקס 8)
                         const isAvailable = (
-                            row[5]?.trim().toLowerCase() === "כן" ||
-                            row[5]?.trim().toLowerCase() === "yes" ||
-                            row[5]?.trim() === "1"
+                            row[8]?.trim().toLowerCase() === "כן" ||
+                            row[8]?.trim().toLowerCase() === "yes" ||
+                            row[8]?.trim() === "1" ||
+                            row[8]?.trim().toLowerCase() === "true"
                         );
 
                         if (!isAvailable) return false;
 
-                        // נרמל מקפים בשם הפרשה מהשורה
-                        const normalizedRowParasha = normalizeHyphens(row[0]?.trim() || '');
+                        // נרמל מקפים בשם הפרשה מהשורה (עמודה B - אינדקס 1)
+                        const normalizedRowParasha = normalizeHyphens(row[1]?.trim() || '');
 
                         // בדוק התאמה לפרשה הנוכחית
                         const matchesParasha = normalizedRowParasha === searchParasha;
@@ -844,20 +847,23 @@
                 }
 
                 // טעינת ארכיון פרשות קודמות (מפרשות שונות) - רק פריטים זמינים וגם לפי קטגוריה
+                // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
+                // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
                 const otherParashot = rows.filter(row => {
-                    if (row.length <= 7) return false;
+                    if (row.length < 9) return false;
 
-                    // ודא שהרשומה זמינה
+                    // ודא שהרשומה זמינה (עמודה I - אינדקס 8)
                     const isAvailable = (
-                        row[5]?.trim().toLowerCase() === "כן" ||
-                        row[5]?.trim().toLowerCase() === "yes" ||
-                        row[5]?.trim() === "1"
+                        row[8]?.trim().toLowerCase() === "כן" ||
+                        row[8]?.trim().toLowerCase() === "yes" ||
+                        row[8]?.trim() === "1" ||
+                        row[8]?.trim().toLowerCase() === "true"
                     );
 
                     if (!isAvailable) return false;
 
-                    // נרמל מקפים בשם הפרשה מהשורה
-                    const normalizedRowParasha = normalizeHyphens(row[0]?.trim() || '');
+                    // נרמל מקפים בשם הפרשה מהשורה (עמודה B - אינדקס 1)
+                    const normalizedRowParasha = normalizeHyphens(row[1]?.trim() || '');
 
                     // בדוק שהפרשה לא אחת מהפרשות שאנחנו כבר מציגים
                     const differentParasha = !parashaList.includes(normalizedRowParasha);
@@ -903,8 +909,9 @@
             selectorContainer.style.display = 'flex';
 
             entries.forEach((entry, index) => {
-                // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה, קטגוריה
-                const [parasha, updateDate, title, content, author, isAvailable, year, category] = entry;
+                // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
+                // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
+                const [timestamp, parasha, title, contentNotUsed, content, author, year, category, isAvailable] = entry;
 
                 const card = document.createElement('div');
                 card.className = `content-card ${index === activeIndex ? 'active' : ''}`;
@@ -941,52 +948,92 @@
             });
         }
 
-        // פונקציה פשוטה לפרסור CSV
+        // פונקציה משופרת לפרסור CSV שמטפלת טוב יותר בשורות עם תוכן מרובה שורות
         function parseCSV(text) {
             const rows = [];
             const lines = text.split('\n');
-
+            
             console.log("מספר שורות בקובץ CSV:", lines.length);
-
+            
             // נדלג על שורת הכותרות
+            let currentRow = [];
+            let currentValue = '';
+            let inQuotes = false;
+            
+            // עיבוד כל השורות
             for (let i = 1; i < lines.length; i++) {
-                if (lines[i].trim() === '') continue;
-
-                // פירוק שורה תוך התחשבות במרכאות
-                let row = [];
-                let inQuotes = false;
-                let currentValue = '';
-
-                for (let j = 0; j < lines[i].length; j++) {
-                    const char = lines[i][j];
-
+                const line = lines[i];
+                
+                // דלג על שורות ריקות
+                if (!inQuotes && line.trim() === '') continue;
+                
+                // עיבוד כל תו בשורה
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    
                     if (char === '"') {
+                        // טיפול במרכאות - החלף את מצב המרכאות
                         inQuotes = !inQuotes;
                     } else if (char === ',' && !inQuotes) {
-                        row.push(currentValue);
+                        // סיום תא - הוסף את הערך הנוכחי לשורה
+                        currentRow.push(currentValue);
                         currentValue = '';
                     } else {
+                        // הוסף את התו לערך הנוכחי
                         currentValue += char;
                     }
                 }
-
-                row.push(currentValue); // הוספת הערך האחרון
-                rows.push(row);
+                
+                // אם אנחנו לא בתוך מרכאות, זה סוף השורה
+                if (!inQuotes) {
+                    // הוסף את התא האחרון
+                    currentRow.push(currentValue);
+                    // הוסף את השורה למערך התוצאות
+                    rows.push(currentRow);
+                    // איפוס למעבר לשורה הבאה
+                    currentRow = [];
+                    currentValue = '';
+                } else {
+                    // אם אנחנו בתוך מרכאות, הוסף שורה חדשה לערך הנוכחי
+                    currentValue += '\n';
+                }
             }
-
+            
+            // אם יש שורה אחרונה שלא הסתיימה
+            if (currentRow.length > 0 || currentValue.length > 0) {
+                currentRow.push(currentValue);
+                rows.push(currentRow);
+            }
+            
             return rows;
         }
 
-        // הצגת התוכן הראשי בעמוד - מעודכן להצגת קטגוריה
+        // הצגת התוכן הראשי בעמוד - מעודכן להצגת קטגוריה ואינדקסים חדשים
         function displayContent(contentRow) {
-            // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה, קטגוריה
-            const [parasha, updateDate, title, content, author, isAvailable, year, category] = contentRow;
+            // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
+            // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
+            const [timestamp, parasha, title, contentNotUsed, content, author, year, category, isAvailable] = contentRow;
 
             // הכנת תצוגת הקטגוריה
             let categoryHtml = '';
             if (category) {
                 const categoryKey = categoryMapping[category] || category.toLowerCase();
                 categoryHtml = `<span class="category-label">${category}</span>`;
+            }
+
+            // פורמט לתאריך הגשה
+            let timestampFormatted = '';
+            if (timestamp) {
+                try {
+                    const date = new Date(timestamp);
+                    if (!isNaN(date.getTime())) {
+                        timestampFormatted = date.toLocaleDateString('he-IL');
+                    } else {
+                        timestampFormatted = timestamp;
+                    }
+                } catch (e) {
+                    timestampFormatted = timestamp;
+                }
             }
 
             const contentHtml = `
@@ -998,8 +1045,8 @@
                         </h3>
                         <div class="content-meta">
                             ${categoryHtml}
-                            <span>מאת: ${author}</span> |
-                            <span>עודכן בתאריך: ${updateDate}</span>
+                            <span>מאת: ${author}</span>
+                            ${timestamp ? `<span> | נכתב בתאריך: ${timestampFormatted}</span>` : ''}
                         </div>
                     </div>
                     <div class="content-body">
@@ -1011,16 +1058,16 @@
             document.getElementById('content-area').innerHTML = contentHtml;
         }
 
-        // טעינת ארכיון פרשות קודמות - מעודכן להצגת קטגוריה
+        // טעינת ארכיון פרשות קודמות - מעודכן לסדר העמודות החדש
         function loadArchiveItems(rows) {
             const archiveContainer = document.getElementById('archive-items');
             archiveContainer.innerHTML = '';
 
-            // מיון השורות לפי תאריך (מהחדש לישן)
+            // מיון השורות לפי תאריך הגשה (מהחדש לישן)
             rows.sort((a, b) => {
-                if (a.length < 2 || b.length < 2) return 0;
-                const dateA = new Date(a[1]);
-                const dateB = new Date(b[1]);
+                if (a.length < 1 || b.length < 1) return 0;
+                const dateA = new Date(a[0]);
+                const dateB = new Date(b[0]);
                 return dateB - dateA;
             });
 
@@ -1030,10 +1077,11 @@
 
             for (const row of rows) {
                 // ודא שיש מספיק עמודות בשורה
-                if (row.length < 7) continue;
+                if (row.length < 9) continue;
 
-                // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה, קטגוריה
-                const [parasha, updateDate, title, content, author, isAvailable, year, category] = row;
+                // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
+                // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
+                const [timestamp, parasha, title, contentNotUsed, content, author, year, category, isAvailable] = row;
 
                 // דלג על שורות לא תקינות
                 if (!parasha || !title) continue;
@@ -1054,7 +1102,7 @@
                     <h4>${title}</h4>
                     <p>פרשת ${parasha} ${year ? `(${year})` : ''}</p>
                     <p>${categoryHtml} מאת: ${author}</p>
-                    <a href="#" onclick="selectParashaAndCategory('${parasha}', '${categoryMapping[category] || category.toLowerCase()}'); return false;">לקריאה</a>
+                    <a href="#" onclick="selectParashaAndCategory('${parasha}', '${categoryMapping[category] || category?.toLowerCase() || 'all'}'); return false;">לקריאה</a>
                 `;
 
                 archiveContainer.appendChild(archiveItem);

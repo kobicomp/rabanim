@@ -16,6 +16,47 @@
             --border-color: #ddd;
         }
         
+        /* ערכות צבעים לקטגוריות שונות */
+        body[data-active-category="aktualya"] {
+            --primary-color: #E91E63;  /* ורוד */
+            --accent-color: #FF5722;
+        }
+        
+        body[data-active-category="values"] {
+            --primary-color: #4CAF50;  /* ירוק */
+            --accent-color: #8BC34A;
+        }
+        
+        body[data-active-category="language"] {
+            --primary-color: #673AB7;  /* סגול */
+            --accent-color: #3F51B5;
+        }
+        
+        body[data-active-category="wisdom"] {
+            --primary-color: #2196F3;  /* כחול */
+            --accent-color: #03A9F4;
+        }
+        
+        body[data-active-category="empowerment"] {
+            --primary-color: #009688;  /* טורקיז */
+            --accent-color: #4DB6AC;
+        }
+        
+        body[data-active-category="parasha"] {
+            --primary-color: #FFC107;  /* צהוב */
+            --accent-color: #FFEB3B;
+        }
+        
+        body[data-active-category="creativity"] {
+            --primary-color: #FF5722;  /* כתום-אדום */
+            --accent-color: #FF9800;
+        }
+        
+        body[data-active-category="mission"] {
+            --primary-color: #795548;  /* חום */
+            --accent-color: #A1887F;
+        }
+        
         * {
             box-sizing: border-box;
             margin: 0;
@@ -87,6 +128,16 @@
             background-color: white;
             cursor: pointer;
             min-width: 200px;
+        }
+        
+        .category-label {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 8px;
         }
         
         .content-selector {
@@ -333,15 +384,15 @@
             
             <nav>
                 <ul class="nav-links">
-                    <li><a href="index.html" class="active">מבואה</a></li>
-                    <li><a href="aktualya.html">אקטואליה</a></li>
-                    <li><a href="values.html">ערכים</a></li>
-                    <li><a href="language.html">שפה</a></li>
-                    <li><a href="wisdom.html">פניני חוכמה</a></li>
-                    <li><a href="empowerment.html">העצמה וכלים לחיים</a></li>
-                    <li><a href="parasha.html">אתגר הפרשה</a></li>
-                    <li><a href="creativity.html">יצירה</a></li>
-                    <li><a href="mission.html">שליחות</a></li>
+                    <li><a href="#" class="active" data-category="all">הכל</a></li>
+                    <li><a href="#" data-category="aktualya">אקטואליה</a></li>
+                    <li><a href="#" data-category="values">ערכים</a></li>
+                    <li><a href="#" data-category="language">שפה</a></li>
+                    <li><a href="#" data-category="wisdom">פניני חוכמה</a></li>
+                    <li><a href="#" data-category="empowerment">העצמה וכלים לחיים</a></li>
+                    <li><a href="#" data-category="parasha">אתגר הפרשה</a></li>
+                    <li><a href="#" data-category="creativity">יצירה</a></li>
+                    <li><a href="#" data-category="mission">שליחות</a></li>
                 </ul>
             </nav>
         </div>
@@ -377,6 +428,9 @@
         // קישור לגיליון הנתונים (שנה קישור זה כשצריך)
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSuqfhHb4HdLcP3WLMT33O61cP_5bQrryiZ-qVSPiAfQNaWCi32iNePVcOdFM7faykcbUX-FpoTuYdE/pub?output=csv';
         // ========================================
+        
+        // משתנה גלובלי לשמירת הקטגוריה הפעילה
+        let activeCategory = 'all';
         
         // פונקציה לנרמול מקפים (ממיר מקפים מיוחדים למקף רגיל)
         function normalizeHyphens(text) {
@@ -493,6 +547,18 @@
             'Nitzavim-Vayeilech': 'ניצבים-וילך'
         };
         
+        // מיפוי שמות קטגוריות לשמות תצוגה בעברית
+        const categoryLabels = {
+            'aktualya': 'אקטואליה',
+            'values': 'ערכים',
+            'language': 'שפה',
+            'wisdom': 'פניני חוכמה',
+            'empowerment': 'העצמה וכלים לחיים',
+            'parasha': 'אתגר הפרשה',
+            'creativity': 'יצירה',
+            'mission': 'שליחות'
+        };
+        
         // פונקציה לקביעת הפרשה הנוכחית לפי התאריך
         async function getCurrentParasha() {
             try {
@@ -603,20 +669,42 @@
             }
         }
         
-        // פונקציה לטעינת התוכן מגוגל שיטס
-        async function loadParashaContent(parashaName = null) {
+        // פונקציה לטעינת התוכן מגוגל שיטס - מעודכנת לטיפול בקטגוריות
+        async function loadParashaContent(parashaName = null, category = null) {
             try {
+                // אם נבחרה קטגוריה חדשה, עדכן את הקטגוריה הפעילה
+                if (category !== null) {
+                    activeCategory = category;
+                    
+                    // עדכן את ה-UI לפי הקטגוריה הנבחרת
+                    document.querySelectorAll('.nav-links a').forEach(link => {
+                        link.classList.remove('active');
+                    });
+                    document.querySelector(`.nav-links a[data-category="${activeCategory}"]`).classList.add('active');
+                    
+                    // עדכן את ערכת הצבעים באמצעות מאפיין data
+                    document.body.setAttribute('data-active-category', activeCategory === 'all' ? '' : activeCategory);
+                    
+                    // עדכן את הכותרת אם זו לא קטגורית 'הכל'
+                    if (activeCategory !== 'all') {
+                        document.querySelector('.page-title').textContent = categoryLabels[activeCategory];
+                    }
+                }
+                
                 // קבל את הפרשה הנוכחית אם לא נבחרה פרשה ספציפית
                 if (!parashaName) {
                     parashaName = await getCurrentParasha();
                 }
                 
-                // נרמל מקפים בשם הפרשה
+              
+           // נרמל מקפים בשם הפרשה
                 parashaName = normalizeHyphens(parashaName);
                 
-                // עדכון שם הפרשה בכותרת
-                document.getElementById('current-parasha-name').textContent = parashaName;
-                document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${parashaName}`;
+                // עדכון שם הפרשה בכותרת אם הקטגוריה היא 'הכל'
+                if (activeCategory === 'all') {
+                    document.getElementById('current-parasha-name').textContent = parashaName;
+                    document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${parashaName}`;
+                }
                 
                 // טען את הנתונים מהגיליון
                 const url = SHEET_URL;
@@ -651,9 +739,9 @@
                 for (const searchParasha of parashaList) {
                     console.log(`מחפש תוכן עבור פרשת ${searchParasha}`);
                     
-                    // סינון תוצאות עבור פרשה נוכחית
+                    // סינון תוצאות עבור פרשה נוכחית וקטגוריה נוכחית
                     const results = rows.filter(row => {
-                        if (row.length <= 5) return false;
+                        if (row.length <= 7) return false; // ודא שיש מספיק עמודות (כולל עמודת הקטגוריה)
                         
                         // ודא שהרשומה זמינה
                         const isAvailable = (
@@ -665,17 +753,25 @@
                         // נרמל מקפים בשם הפרשה מהשורה
                         const normalizedRowParasha = normalizeHyphens(row[0]?.trim() || '');
                         
+                        // קבל את הקטגוריה מהשורה (עמודה H - אינדקס 7)
+                        const rowCategory = row[7]?.trim().toLowerCase() || '';
+                        
                         // בדוק התאמה לפרשה הנוכחית
-                        return normalizedRowParasha === searchParasha && isAvailable;
+                        const matchesParasha = normalizedRowParasha === searchParasha;
+                        
+                        // בדוק התאמה לקטגוריה, אם 'הכל' נבחר אז כל הקטגוריות מתאימות
+                        const matchesCategory = activeCategory === 'all' || rowCategory === activeCategory;
+                        
+                        return matchesParasha && isAvailable && matchesCategory;
                     });
                     
-                    console.log(`נמצאו ${results.length} תוצאות עבור פרשת ${searchParasha}`);
+                    console.log(`נמצאו ${results.length} תוצאות עבור פרשת ${searchParasha} בקטגוריה ${activeCategory}`);
                     
                     // הוסף את התוצאות למערך הכולל
                     allResults = [...allResults, ...results];
                 }
                 
-                console.log(`סך הכל נמצאו ${allResults.length} רשומות לפרשת ${parashaName}`);
+                console.log(`סך הכל נמצאו ${allResults.length} רשומות לפרשת ${parashaName} בקטגוריה ${activeCategory}`);
                 
                 // אם יש רשומות, הצג אותן
                 if (allResults.length > 0) {
@@ -685,7 +781,7 @@
                     // הצג בוחר תוכן אם יש יותר מרשומה אחת
                     if (allResults.length > 1) {
                         displayContentSelector(allResults, 0); // האינדקס הראשון פעיל כברירת מחדל
-                   } else {
+                    } else {
                         // אם יש רק רשומה אחת, וודא שבוחר התוכן מוסתר
                         const selectorContainer = document.getElementById('content-selector');
                         if (selectorContainer) {
@@ -694,13 +790,20 @@
                     }
                 } else {
                     // אם אין רשומות, הצג הודעה מתאימה
+                    let message = '';
+                    if (activeCategory !== 'all') {
+                        message = `אין כרגע דבר תורה בקטגוריית ${categoryLabels[activeCategory]} לפרשת ${parashaName}.`;
+                    } else {
+                        message = `אין כרגע דבר תורה זמין לפרשת ${parashaName}.`;
+                    }
+                    
                     document.getElementById('content-area').innerHTML = `
                         <div class="content-container">
                             <div class="content-header">
                                 <h3 class="content-title">אין תוכן זמין</h3>
                             </div>
                             <div class="content-body">
-                                <p>אין כרגע דבר תורה זמין לפרשת ${parashaName}.</p>
+                                <p>${message}</p>
                             </div>
                         </div>
                     `;
@@ -712,9 +815,9 @@
                     }
                 }
                 
-                // טעינת ארכיון פרשות קודמות (מפרשות שונות) - רק פריטים זמינים
+                // טעינת ארכיון פרשות קודמות (מפרשות שונות) - רק פריטים זמינים וגם לפי קטגוריה
                 const otherParashot = rows.filter(row => {
-                    if (row.length <= 5) return false;
+                    if (row.length <= 7) return false;
                     
                     // ודא שהרשומה זמינה
                     const isAvailable = (
@@ -726,8 +829,16 @@
                     // נרמל מקפים בשם הפרשה מהשורה
                     const normalizedRowParasha = normalizeHyphens(row[0]?.trim() || '');
                     
+                    // קבל את הקטגוריה מהשורה (עמודה H - אינדקס 7)
+                    const rowCategory = row[7]?.trim().toLowerCase() || '';
+                    
                     // בדוק שהפרשה לא אחת מהפרשות שאנחנו כבר מציגים
-                    return !parashaList.includes(normalizedRowParasha) && isAvailable;
+                    const differentParasha = !parashaList.includes(normalizedRowParasha);
+                    
+                    // בדוק התאמה לקטגוריה, אם 'הכל' נבחר אז כל הקטגוריות מתאימות
+                    const matchesCategory = activeCategory === 'all' || rowCategory === activeCategory;
+                    
+                    return differentParasha && isAvailable && matchesCategory;
                 });
                 
                 loadArchiveItems(otherParashot);
@@ -755,16 +866,30 @@
             selectorContainer.style.display = 'flex';
             
             entries.forEach((entry, index) => {
-                // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה
-                const [parasha, updateDate, title, content, author, isAvailable, year] = entry;
+                // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה, קטגוריה
+                const [parasha, updateDate, title, content, author, isAvailable, year, category] = entry;
                 
                 const card = document.createElement('div');
                 card.className = `content-card ${index === activeIndex ? 'active' : ''}`;
-                card.innerHTML = `
-                    <h4>${title}</h4>
-                    <p>מאת: ${author}</p>
-                    ${year ? `<span class="year-tag">${year}</span>` : ''}
-                `;
+                
+                // בניית תוכן הכרטיסיה כולל תווית הקטגוריה
+                let cardContent = `<h4>${title}</h4>`;
+                
+                // הוסף תווית קטגוריה אם קיימת
+                if (category) {
+                    const categoryKey = category.toLowerCase();
+                    const displayCategory = categoryLabels[categoryKey] || category;
+                    cardContent += `<span class="category-label">${displayCategory}</span>`;
+                }
+                
+                cardContent += `<p>מאת: ${author}</p>`;
+                
+                // הוסף תווית שנה אם קיימת
+                if (year) {
+                    cardContent += `<span class="year-tag">${year}</span>`;
+                }
+                
+                card.innerHTML = cardContent;
                 
                 card.addEventListener('click', function() {
                     // הסר את המחלקה 'active' מכל הכרטיסיות
@@ -816,10 +941,18 @@
             return rows;
         }
         
-        // הצגת התוכן הראשי בעמוד
+        // הצגת התוכן הראשי בעמוד - מעודכן להצגת קטגוריה
         function displayContent(contentRow) {
-            // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה
-            const [parasha, updateDate, title, content, author, isAvailable, year] = contentRow;
+            // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה, קטגוריה
+            const [parasha, updateDate, title, content, author, isAvailable, year, category] = contentRow;
+            
+            // הכנת תצוגת הקטגוריה
+            let categoryHtml = '';
+            if (category) {
+                const categoryKey = category.toLowerCase();
+                const displayCategory = categoryLabels[categoryKey] || category;
+                categoryHtml = `<span class="category-label">${displayCategory}</span>`;
+            }
             
             const contentHtml = `
                 <div class="content-container">
@@ -829,6 +962,7 @@
                             ${title}
                         </h3>
                         <div class="content-meta">
+                            ${categoryHtml}
                             <span>מאת: ${author}</span> | 
                             <span>עודכן בתאריך: ${updateDate}</span>
                         </div>
@@ -842,7 +976,7 @@
             document.getElementById('content-area').innerHTML = contentHtml;
         }
         
-        // טעינת ארכיון פרשות קודמות
+        // טעינת ארכיון פרשות קודמות - מעודכן להצגת קטגוריה
         function loadArchiveItems(rows) {
             const archiveContainer = document.getElementById('archive-items');
             archiveContainer.innerHTML = '';
@@ -856,15 +990,15 @@
             });
             
             // מספר מוגבל של פריטים להצגה בארכיון
-            const maxItems = 4;
+            const maxItems = 6;
             let count = 0;
             
             for (const row of rows) {
                 // ודא שיש מספיק עמודות בשורה
-                if (row.length < 5) continue;
+                if (row.length < 7) continue;
                 
-                // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה
-                const [parasha, updateDate, title, content, author, isAvailable, year] = row;
+                // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה, קטגוריה
+                const [parasha, updateDate, title, content, author, isAvailable, year, category] = row;
                 
                 // דלג על שורות לא תקינות
                 if (!parasha || !title) continue;
@@ -872,12 +1006,20 @@
                 // הגבלת מספר הפריטים
                 if (count >= maxItems) break;
                 
+                // הכנת תצוגת הקטגוריה
+                let categoryHtml = '';
+                if (category) {
+                    const categoryKey = category.toLowerCase();
+                    const displayCategory = categoryLabels[categoryKey] || category;
+                    categoryHtml = `<span class="category-label">${displayCategory}</span>`;
+                }
+                
                 const archiveItem = document.createElement('div');
                 archiveItem.className = 'archive-item';
                 archiveItem.innerHTML = `
                     <h4>${title}</h4>
                     <p>פרשת ${parasha} ${year ? `(${year})` : ''}</p>
-                    <p>מאת: ${author}</p>
+                    <p>${categoryHtml} מאת: ${author}</p>
                     <a href="#" onclick="loadParashaContent('${parasha}'); return false;">לקריאה</a>
                 `;
                 
@@ -886,8 +1028,28 @@
             }
             
             if (count === 0) {
-                archiveContainer.innerHTML = '<p style="text-align: center; grid-column: 1/-1;">אין דברי תורה קודמים בארכיון.</p>';
+                let message = '';
+                if (activeCategory !== 'all') {
+                    message = `אין דברי תורה קודמים בקטגוריית ${categoryLabels[activeCategory]} בארכיון.`;
+                } else {
+                    message = 'אין דברי תורה קודמים בארכיון.';
+                }
+                
+                archiveContainer.innerHTML = `<p style="text-align: center; grid-column: 1/-1;">${message}</p>`;
             }
+        }
+        
+        // הוסף ניהול אירועי קטגוריה
+        function setupCategoryHandlers() {
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const category = this.getAttribute('data-category');
+                    
+                    // טען תוכן חדש לפי הקטגוריה הנבחרת
+                    loadParashaContent(null, category);
+                });
+            });
         }
         
         // אתחול הדף כשהוא נטען
@@ -899,14 +1061,17 @@
                 // טען את רשימת הפרשות עם הפרשה הנוכחית מסומנת
                 const currentParasha = await loadParashotOptions();
                 
+                // הגדר מטפלי אירועים לקטגוריות
+                setupCategoryHandlers();
+                
                 // טען את התוכן של הפרשה הנוכחית
-                await loadParashaContent(currentParasha);
+                await loadParashaContent(currentParasha, 'all');
             } catch (error) {
                 console.error('שגיאה באתחול הדף:', error);
                 // טען גרסה פשוטה במקרה של שגיאה
                 document.querySelector('.page-title').textContent = 'דבר תורה לפרשת השבוע';
                 document.getElementById('current-parasha-name').textContent = 'בראשית';
-                loadParashaContent('בראשית');
+                loadParashaContent('בראשית', 'all');
             }
         });
     </script>

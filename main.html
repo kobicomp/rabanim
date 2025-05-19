@@ -22,6 +22,11 @@
             --accent-color: #ff9800;
         }
         
+        body[data-active-category="mefakeach"] {
+            --primary-color: #6A1B9A;  /* סגול כהה */
+            --accent-color: #9C27B0;
+        }
+        
         body[data-active-category="aktualya"] {
             --primary-color: #E91E63;  /* ורוד */
             --accent-color: #FF5722;
@@ -392,6 +397,7 @@
                 <ul class="nav-links">
                     <li><a href="#" class="active" data-category="all">הכל</a></li>
                     <li><a href="#" data-category="divrei-torah">דבר תורה</a></li>
+                    <li><a href="#" data-category="mefakeach">דבר המפקח הארצי</a></li>
                     <li><a href="#" data-category="aktualya">אקטואליה</a></li>
                     <li><a href="#" data-category="values">ערכים</a></li>
                     <li><a href="#" data-category="language">שפה</a></li>
@@ -559,6 +565,7 @@
         // מיפוי שמות קטגוריות לשמות תצוגה בעברית
         const categoryLabels = {
             'divrei-torah': 'דבר תורה',
+            'mefakeach': 'דבר המפקח הארצי',
             'aktualya': 'אקטואליה',
             'values': 'ערכים',
             'language': 'שפה',
@@ -572,6 +579,7 @@
         // מיפוי שמות תצוגה בעברית לקטגוריות באנגלית
         const categoryMapping = {
             'דבר תורה': 'divrei-torah',
+            'דבר המפקח הארצי': 'mefakeach',
             'אקטואליה': 'aktualya',
             'ערכים': 'values',
             'שפה': 'language',
@@ -687,13 +695,13 @@
                 document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${currentParasha}`;
                 
                 return currentParasha;
-            } catch (error) {
+          } catch (error) {
                 console.error('שגיאה בטעינת הפרשות:', error);
                 return "בראשית"; // ברירת מחדל
             }
         }
         
-      // פונקציה לטעינת התוכן מגוגל שיטס - מעודכנת לטיפול בקטגוריות
+        // פונקציה לטעינת התוכן מגוגל שיטס - מעודכנת לטיפול בקטגוריות
         async function loadParashaContent(parashaName = null, category = null) {
             try {
                 // אם נבחרה קטגוריה חדשה, עדכן את הקטגוריה הפעילה

@@ -378,91 +378,80 @@
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSuqfhHb4HdLcP3WLMT33O61cP_5bQrryiZ-qVSPiAfQNaWCi32iNePVcOdFM7faykcbUX-FpoTuYdE/pub?output=csv';
         // ========================================
         
-        // טבלת המרה של שמות פרשות מאנגלית לעברית
-        const parashaTranslation = {
-            'Bereshit': 'בראשית',
-            'Noach': 'נח',
-            'Lech-Lecha': 'לך לך',
-            'Vayera': 'וירא',
-            'Chayei Sara': 'חיי שרה',
-            'Toldot': 'תולדות',
-            'Vayetzei': 'ויצא',
-            'Vayishlach': 'וישלח',
-            'Vayeshev': 'וישב',
-            'Miketz': 'מקץ',
-            'Vayigash': 'ויגש',
-            'Vayechi': 'ויחי',
-            'Shemot': 'שמות',
-            'Vaera': 'וארא',
-            'Bo': 'בא',
-            'Beshalach': 'בשלח',
-            'Yitro': 'יתרו',
-            'Mishpatim': 'משפטים',
-            'Terumah': 'תרומה',
-            'Tetzaveh': 'תצוה',
-            'Ki Tisa': 'כי תשא',
-            'Vayakhel': 'ויקהל',
-            'Pekudei': 'פקודי',
-            'Vayikra': 'ויקרא',
-            'Tzav': 'צו',
-            'Shmini': 'שמיני',
-            'Tazria': 'תזריע',
-            'Metzora': 'מצורע',
-            'Achrei Mot': 'אחרי מות',
-            'Kedoshim': 'קדושים',
-            'Emor': 'אמור',
-            'Behar': 'בהר',
-            'Bechukotai': 'בחוקותי',
-            'Bamidbar': 'במדבר',
-            'Nasso': 'נשא',
-            'Beha\'alotcha': 'בהעלותך',
-            'Sh\'lach': 'שלח',
-            'Korach': 'קרח',
-            'Chukat': 'חקת',
-            'Balak': 'בלק',
-            'Pinchas': 'פינחס',
-            'Matot': 'מטות',
-            'Masei': 'מסעי',
-            'Devarim': 'דברים',
-            'Vaetchanan': 'ואתחנן',
-            'Eikev': 'עקב',
-            'Re\'eh': 'ראה',
-            'Shoftim': 'שופטים',
-            'Ki Teitzei': 'כי תצא',
-            'Ki Tavo': 'כי תבוא',
-            'Nitzavim': 'ניצבים',
-            'Vayeilech': 'וילך',
-            'Ha\'Azinu': 'האזינו',
-            'Vezot Haberakhah': 'וזאת הברכה',
+        // מילון מיפוי של פרשות וההתאמות שלהן - טיפול בפרשות כפולות
+        const parashaMapping = {
+            // פרשות רגילות
+            "בראשית": ["בראשית"],
+            "נח": ["נח"],
+            "לך לך": ["לך לך", "לך-לך"],
+            "וירא": ["וירא"],
+            "חיי שרה": ["חיי שרה", "חיי-שרה"],
+            "תולדות": ["תולדות"],
+            "ויצא": ["ויצא"],
+            "וישלח": ["וישלח"],
+            "וישב": ["וישב"],
+            "מקץ": ["מקץ"],
+            "ויגש": ["ויגש"],
+            "ויחי": ["ויחי"],
+            "שמות": ["שמות"],
+            "וארא": ["וארא"],
+            "בא": ["בא"],
+            "בשלח": ["בשלח"],
+            "יתרו": ["יתרו"],
+            "משפטים": ["משפטים"],
+            "תרומה": ["תרומה"],
+            "תצוה": ["תצוה", "תצווה"],
+            "כי תשא": ["כי תשא", "כי-תשא"],
+            "ויקהל": ["ויקהל"],
+            "פקודי": ["פקודי"],
+            "ויקרא": ["ויקרא"],
+            "צו": ["צו"],
+            "שמיני": ["שמיני"],
+            "תזריע": ["תזריע"],
+            "מצורע": ["מצורע"],
+            "אחרי מות": ["אחרי מות", "אחרי-מות"],
+            "קדושים": ["קדושים"],
+            "אמור": ["אמור"],
+            "בהר": ["בהר"],
+            "בחוקותי": ["בחוקותי", "בחקתי"],
+            "במדבר": ["במדבר"],
+            "נשא": ["נשא"],
+            "בהעלותך": ["בהעלותך"],
+            "שלח": ["שלח"],
+            "קרח": ["קרח"],
+            "חקת": ["חקת", "חוקת"],
+            "בלק": ["בלק"],
+            "פינחס": ["פינחס", "פנחס"],
+            "מטות": ["מטות"],
+            "מסעי": ["מסעי"],
+            "דברים": ["דברים"],
+            "ואתחנן": ["ואתחנן"],
+            "עקב": ["עקב"],
+            "ראה": ["ראה"],
+            "שופטים": ["שופטים"],
+            "כי תצא": ["כי תצא", "כי-תצא"],
+            "כי תבוא": ["כי תבוא", "כי-תבוא", "כי תבא", "כי-תבא"],
+            "ניצבים": ["ניצבים", "נצבים"],
+            "וילך": ["וילך"],
+            "האזינו": ["האזינו"],
+            "וזאת הברכה": ["וזאת הברכה", "וזאת-הברכה"],
+            
             // פרשות כפולות
-            'Vayakhel-Pekudei': 'ויקהל-פקודי',
-            'Tazria-Metzora': 'תזריע-מצורע',
-            'Achrei Mot-Kedoshim': 'אחרי מות-קדושים',
-            'Behar-Bechukotai': 'בהר-בחוקותי',
-            'Chukat-Balak': 'חקת-בלק',
-            'Matot-Masei': 'מטות-מסעי',
-            'Nitzavim-Vayeilech': 'ניצבים-וילך'
+            "ויקהל-פקודי": ["ויקהל-פקודי", "ויקהל פקודי", "ויקהל", "פקודי"],
+            "תזריע-מצורע": ["תזריע-מצורע", "תזריע מצורע", "תזריע", "מצורע"],
+            "אחרי מות-קדושים": ["אחרי מות-קדושים", "אחרי-מות-קדושים", "אחרי מות קדושים", "אחרי מות", "קדושים"],
+            "בהר-בחוקותי": ["בהר-בחוקותי", "בהר-בחקתי", "בהר בחוקותי", "בהר בחקתי", "בהר", "בחוקותי", "בחקתי"],
+            "חקת-בלק": ["חקת-בלק", "חוקת-בלק", "חקת בלק", "חוקת בלק", "חקת", "חוקת", "בלק"],
+            "מטות-מסעי": ["מטות-מסעי", "מטות מסעי", "מטות", "מסעי"],
+            "ניצבים-וילך": ["ניצבים-וילך", "נצבים-וילך", "ניצבים וילך", "נצבים וילך", "ניצבים", "נצבים", "וילך"]
         };
         
-        // רשימת פרשות השבוע כפי שהיא קיימת בגיליון
-        const parashot = [
-            "בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ",
-            "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה",
-            "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים",
-            "אמור", "בהר", "בחוקותי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק",
-            "פינחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא",
-            "ניצבים", "וילך", "האזינו", "וזאת הברכה",
-            // פרשות כפולות
-            "ויקהל-פקודי", "תזריע-מצורע", "אחרי מות-קדושים", "בהר-בחוקותי", 
-            "חקת-בלק", "מטות-מסעי", "ניצבים-וילך"
-        ];
-        
-        // פונקציה עזר לפורמט תאריך
+        // פונקציה לקביעת פורמט תאריך במבנה YYYY-MM-DD
         function formatDate(date) {
             return date.toISOString().split('T')[0];
         }
 
-        // פונקציה לקביעת תאריך השבת הקרובה
+        // פונקציה לחישוב תאריך השבת הקרובה
         function getParashaWeek(date) {
             const d = new Date(date);
             const day = d.getDay();
@@ -470,6 +459,29 @@
             const daysToAdd = (day === 6) ? 7 : (6 - day);
             targetSaturday.setDate(d.getDate() + daysToAdd);
             return formatDate(targetSaturday);
+        }
+        
+        // פונקציה להסרת ניקוד מטקסט עברי
+        function removeHebrewNiqqud(text) {
+            if (!text) return '';
+            return text.replace(/[\u0591-\u05BD\u05BF-\u05C7]/g, '');
+        }
+        
+        // פונקציה לבדיקה אם פרשה מסוימת מתאימה לחיפוש
+        function isMatchingParasha(rowParasha, searchParasha) {
+            // בדיקה בסיסית
+            if (!rowParasha || !searchParasha) return false;
+            
+            // הסר ניקוד ורווחים מיותרים
+            const normalizedRowParasha = removeHebrewNiqqud(rowParasha.trim());
+            const normalizedSearchParasha = removeHebrewNiqqud(searchParasha.trim());
+            
+            // בדיקת התאמה מדויקת
+            if (normalizedRowParasha === normalizedSearchParasha) {
+                return true;
+            }
+            
+            return false;
         }
         
         // פונקציה להצגת התאריך העברי
@@ -560,8 +572,11 @@
                 // קבל את הפרשה הנוכחית
                 const currentParasha = await getCurrentParasha();
                 
+                // רשימת כל הפרשות (רגילות + כפולות)
+                const allParashot = Object.keys(parashaMapping);
+                
                 // מילוי אפשרויות הבחירה
-                parashot.forEach(parasha => {
+                allParashot.forEach(parasha => {
                     const option = document.createElement('option');
                     option.value = parasha;
                     option.textContent = parasha;
@@ -606,22 +621,31 @@
                 // נפרסר את ה-CSV
                 const rows = parseCSV(csvText);
                 
-                // טיפול בפרשות כפולות - בדוק הן את הפרשה המלאה והן את החלקים
-                let searchParashas = [parashaName];
-                if (parashaName.includes('-')) {
-                    // פרק את הפרשה הכפולה לחלקים
-                    const parts = parashaName.split('-');
-                    searchParashas = [...searchParashas, ...parts];
-                }
+                // רשימת פרשות לחיפוש - חפש במילון ההתאמות
+                let searchParashas = parashaMapping[parashaName] || [parashaName];
+                
+                console.log("מחפש פרשות:", searchParashas);
                 
                 // נסנן רק את הרשומות הזמינות עבור הפרשה הנוכחית או חלקיה
-                const parashaEntries = rows.filter(row => 
-                    row.length > 5 && 
-                    searchParashas.includes(row[0].trim()) &&
-                    (row[5].trim().toLowerCase() === "כן" || row[5].trim().toLowerCase() === "yes" || row[5].trim() === "1")
-                );
+                const parashaEntries = rows.filter(row => {
+                    if (row.length <= 5) return false;
+                    
+                    const rowParasha = row[0].trim();
+                    const isAvailable = (
+                        row[5].trim().toLowerCase() === "כן" || 
+                        row[5].trim().toLowerCase() === "yes" || 
+                        row[5].trim() === "1"
+                    );
+                    
+                    // בדוק אם הפרשה בשורה מתאימה לאחת מהפרשות שאנחנו מחפשים
+                    const matchesAnyParasha = searchParashas.some(p => 
+                        isMatchingParasha(rowParasha, p)
+                    );
+                    
+                    return matchesAnyParasha && isAvailable;
+                });
                 
-                console.log(`נמצאו ${parashaEntries.length} רשומות זמינות לפרשת ${parashaName}`);
+                console.log(`נמצאו ${parashaEntries.length} רשומות זמינות לפרשת ${parashaName}:`, parashaEntries);
                 
                 // אם יש רשומות לפרשה זו, הצג אותן
                 if (parashaEntries.length > 0) {
@@ -659,11 +683,25 @@
                 }
                 
                 // טעינת ארכיון פרשות קודמות (מפרשות שונות) - רק פריטים זמינים
-                const otherParashot = rows.filter(row => 
-                    row.length > 5 && 
-                    !searchParashas.includes(row[0].trim()) &&
-                    (row[5].trim().toLowerCase() === "כן" || row[5].trim().toLowerCase() === "yes" || row[5].trim() === "1")
-                );
+                // השתמש במילון המיפוי להוסיף את כל הוריאציות האפשריות כדי להימנע מהצגת פרשות קשורות בארכיון
+                const allRelatedParashas = searchParashas;
+                
+                const otherParashot = rows.filter(row => {
+                    if (row.length <= 5) return false;
+                    
+                    const rowParasha = row[0].trim();
+                    const isAvailable = (
+                        row[5].trim().toLowerCase() === "כן" || 
+                        row[5].trim().toLowerCase() === "yes" || 
+                        row[5].trim() === "1"
+                    );
+                   // בדוק שהפרשה אינה אחת מהפרשות שאנחנו כבר מציגים
+                    const isNotCurrentParasha = !allRelatedParashas.some(p => 
+                        isMatchingParasha(rowParasha, p)
+                    );
+                    
+                    return isNotCurrentParasha && isAvailable;
+                });
                 
                 loadArchiveItems(otherParashot);
                 
@@ -844,6 +882,72 @@
                 loadParashaContent('בראשית');
             }
         });
+        
+        // טבלת המרה של שמות פרשות מאנגלית לעברית
+        const parashaTranslation = {
+            'Bereshit': 'בראשית',
+            'Noach': 'נח',
+            'Lech-Lecha': 'לך לך',
+            'Vayera': 'וירא',
+            'Chayei Sara': 'חיי שרה',
+            'Toldot': 'תולדות',
+            'Vayetzei': 'ויצא',
+            'Vayishlach': 'וישלח',
+            'Vayeshev': 'וישב',
+            'Miketz': 'מקץ',
+            'Vayigash': 'ויגש',
+            'Vayechi': 'ויחי',
+            'Shemot': 'שמות',
+            'Vaera': 'וארא',
+            'Bo': 'בא',
+            'Beshalach': 'בשלח',
+            'Yitro': 'יתרו',
+            'Mishpatim': 'משפטים',
+            'Terumah': 'תרומה',
+            'Tetzaveh': 'תצוה',
+            'Ki Tisa': 'כי תשא',
+            'Vayakhel': 'ויקהל',
+            'Pekudei': 'פקודי',
+            'Vayikra': 'ויקרא',
+            'Tzav': 'צו',
+            'Shmini': 'שמיני',
+            'Tazria': 'תזריע',
+            'Metzora': 'מצורע',
+            'Achrei Mot': 'אחרי מות',
+            'Kedoshim': 'קדושים',
+            'Emor': 'אמור',
+            'Behar': 'בהר',
+            'Bechukotai': 'בחוקותי',
+            'Bamidbar': 'במדבר',
+            'Nasso': 'נשא',
+            'Beha\'alotcha': 'בהעלותך',
+            'Sh\'lach': 'שלח',
+            'Korach': 'קרח',
+            'Chukat': 'חקת',
+            'Balak': 'בלק',
+            'Pinchas': 'פינחס',
+            'Matot': 'מטות',
+            'Masei': 'מסעי',
+            'Devarim': 'דברים',
+            'Vaetchanan': 'ואתחנן',
+            'Eikev': 'עקב',
+            'Re\'eh': 'ראה',
+            'Shoftim': 'שופטים',
+            'Ki Teitzei': 'כי תצא',
+            'Ki Tavo': 'כי תבוא',
+            'Nitzavim': 'ניצבים',
+            'Vayeilech': 'וילך',
+            'Ha\'Azinu': 'האזינו',
+            'Vezot Haberakhah': 'וזאת הברכה',
+            // פרשות כפולות
+            'Vayakhel-Pekudei': 'ויקהל-פקודי',
+            'Tazria-Metzora': 'תזריע-מצורע',
+            'Achrei Mot-Kedoshim': 'אחרי מות-קדושים',
+            'Behar-Bechukotai': 'בהר-בחוקותי',
+            'Chukat-Balak': 'חקת-בלק',
+            'Matot-Masei': 'מטות-מסעי',
+            'Nitzavim-Vayeilech': 'ניצבים-וילך'
+        };
     </script>
 </body>
 </html>

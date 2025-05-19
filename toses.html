@@ -3,16 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>הוספת דבר תורה חדש</title>
+    <title>טופס הוספת תכנים - דברי תורה</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #3f51b5;
+            --primary-color: #4062bb;
             --accent-color: #ff9800;
             --bg-color: #f8f9fa;
             --text-color: #333;
             --header-bg: #f0f4f8;
             --footer-bg: #e1e5eb;
             --border-color: #ddd;
+            --gradient-start: #4062bb;
+            --gradient-end: #5a7ed2;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-bg: #ffffff;
+            --border-radius: 10px;
+            --transition-speed: 0.3s;
+            --input-border: #e0e0e0;
+            --input-focus: #4062bb;
+            --form-bg: rgba(255, 255, 255, 0.95);
         }
         
         * {
@@ -22,10 +35,12 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            font-family: 'Rubik', 'Heebo', sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
             line-height: 1.6;
+            background-image: linear-gradient(135deg, rgba(240, 244, 248, 0.8) 0%, rgba(248, 250, 252, 0.8) 100%);
+            background-attachment: fixed;
         }
         
         .container {
@@ -35,104 +50,301 @@
         }
         
         header {
-            background-color: var(--header-bg);
-            padding: 1rem 0;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
+            padding: 1.5rem 0;
+            box-shadow: 0 2px 15px var(--shadow-color);
             margin-bottom: 2rem;
             text-align: center;
+            color: white;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
         }
         
         h1 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
+            color: white;
+            margin-bottom: 0.8rem;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+            font-weight: 700;
+        }
+        
+        .header-subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
         form {
-            background-color: white;
+            background: var(--form-bg);
             padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: var(--border-radius);
+            box-shadow: 0 5px 20px var(--shadow-color);
+            border-top: 5px solid var(--primary-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            z-index: 1;
         }
         
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.8rem;
+            position: relative;
         }
         
         label {
             display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
+            margin-bottom: 0.6rem;
+            font-weight: 500;
             color: var(--primary-color);
+            font-size: 1rem;
+        }
+        
+        .required-mark {
+            color: #e91e63;
+            margin-right: 3px;
         }
         
         input[type="text"],
         select,
         textarea {
             width: 100%;
-            padding: 10px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 16px;
-            font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+            padding: 12px 15px;
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            font-size: 1rem;
+            font-family: 'Rubik', 'Heebo', sans-serif;
+            transition: all var(--transition-speed) ease;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        input[type="text"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--input-focus);
+            box-shadow: 0 0 0 3px rgba(64, 98, 187, 0.2);
         }
         
         textarea {
             min-height: 200px;
             resize: vertical;
+            line-height: 1.6;
         }
         
         select {
-            height: 40px;
-            background-color: white;
+            height: 48px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 16px;
+            padding-left: 30px;
         }
         
         .btn-submit {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             color: white;
             border: none;
-            padding: 12px 20px;
-            font-size: 16px;
-            border-radius: 4px;
+            padding: 14px 20px;
+            font-size: 1.1rem;
+            border-radius: 8px;
             cursor: pointer;
             display: block;
             width: 100%;
             text-align: center;
-            transition: background-color 0.3s;
+            transition: all var(--transition-speed) ease;
+            font-weight: 500;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(-100%);
+            transition: transform 0.4s ease;
         }
         
         .btn-submit:hover {
-            background-color: #303f9f;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .btn-submit:hover::before {
+            transform: translateX(0);
+        }
+        
+        .btn-submit:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        /* סגנון הודעת סטטוס */
+        .status-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .status-popup {
+            background-color: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.4s ease;
+        }
+        
+        .status-popup.success {
+            border-top: 5px solid #4CAF50;
+        }
+        
+        .status-popup.error {
+            border-top: 5px solid #F44336;
+        }
+        
+        .status-icon {
+            font-size: 50px;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        .success .status-icon::before {
+            content: '✓';
+            color: #4CAF50;
+        }
+        
+        .error .status-icon::before {
+            content: '✗';
+            color: #F44336;
+        }
+        
+        .status-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+            color: #333;
         }
         
         .status-message {
-            margin-top: 1rem;
-            padding: 1rem;
-            border-radius: 4px;
-            display: none;
+            margin-bottom: 1.5rem;
+            color: #666;
+            line-height: 1.6;
         }
         
-        .status-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+        .status-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all var(--transition-speed) ease;
         }
         
-        .status-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+        .status-btn:hover {
+            background-color: var(--gradient-end);
+        }
+        
+        /* כאשר הודעת סטטוס פעילה */
+        .status-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .status-overlay.active .status-popup {
+            transform: translateY(0);
         }
         
         footer {
-            margin-top: 2rem;
+            margin-top: 2.5rem;
             text-align: center;
             color: #6c757d;
-            font-size: 0.9rem;
+            padding: 1rem 0;
+            border-top: 1px solid var(--border-color);
         }
         
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color var(--transition-speed) ease;
+        }
+        
+        footer a:hover {
+            color: var(--accent-color);
+            text-decoration: underline;
+        }
+        
+        /* מותאם למסכים קטנים */
         @media (max-width: 768px) {
             form {
-                padding: 1rem;
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1.2rem;
+            }
+        }
+        
+        /* מותאם לטלפונים קטנים */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px 10px;
+            }
+            
+            form {
+                padding: 1.2rem;
+            }
+            
+            input[type="text"],
+            select,
+            textarea {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            .status-popup {
+                padding: 1.5rem;
             }
         }
     </style>
@@ -140,15 +352,15 @@
 <body>
     <header>
         <div class="container">
-            <h1>הוספת דבר תורה חדש</h1>
-            <p>הזן את המידע הדרוש להוספת דבר תורה חדש למאגר</p>
+            <h1>טופס הוספת תכנים לאתר דברי התורה</h1>
+            <p class="header-subtitle">של סגל א' של רבני החמ"ד</p>
         </div>
     </header>
     
     <div class="container">
         <form id="torahSubmissionForm" action="https://docs.google.com/forms/d/e/1FAIpQLSec6bCAxAEF76IsySRadE-6dptEIYbPLbCZ7__C7e0hWDKUAQ/formResponse" method="post" target="hidden-iframe">
             <div class="form-group">
-                <label for="parasha">פרשה *</label>
+                <label for="parasha">פרשה <span class="required-mark">*</span></label>
                 <select id="parasha" name="entry.1747356093" required>
                     <option value="">בחר פרשה...</option>
                     <option value="בראשית">בראשית</option>
@@ -217,17 +429,17 @@
             </div>
             
             <div class="form-group">
-                <label for="title">כותרת *</label>
+                <label for="title">כותרת <span class="required-mark">*</span></label>
                 <input type="text" id="title" name="entry.2084429264" required>
             </div>
             
             <div class="form-group">
-                <label for="content">תוכן *</label>
-                <textarea id="content" name="entry.177859311" required></textarea>
+                <label for="content">תוכן <span class="required-mark">*</span></label>
+                <textarea id="content" name="entry.177859311" required placeholder="הזן כאן את תוכן דבר התורה. ניתן לכתוב HTML בסיסי לעיצוב התוכן (למשל, <b>מודגש</b>, <i>נטוי</i>, <br> לשורה חדשה)."></textarea>
             </div>
             
             <div class="form-group">
-                <label for="author">שם הכותב *</label>
+                <label for="author">שם הכותב <span class="required-mark">*</span></label>
                 <input type="text" id="author" name="entry.386950228" required>
             </div>
             
@@ -237,7 +449,7 @@
             </div>
             
             <div class="form-group">
-                <label for="category">קטגוריה *</label>
+                <label for="category">קטגוריה <span class="required-mark">*</span></label>
                 <select id="category" name="entry.2000375306" required>
                     <option value="">בחר קטגוריה...</option>
                     <option value="דבר תורה">דבר תורה</option>
@@ -256,9 +468,17 @@
             <div class="form-group">
                 <button type="submit" class="btn-submit">שלח דבר תורה</button>
             </div>
-            
-            <div id="statusMessage" class="status-message"></div>
         </form>
+        
+        <!-- חלון אישור -->
+        <div id="statusOverlay" class="status-overlay">
+            <div id="statusPopup" class="status-popup">
+                <span class="status-icon"></span>
+                <h3 class="status-title">נשלח בהצלחה</h3>
+                <p class="status-message">דבר התורה נשלח בהצלחה ויוסף למאגר לאחר אישור.</p>
+                <button class="status-btn" onclick="closeStatusPopup()">סגור</button>
+            </div>
+        </div>
         
         <iframe name="hidden-iframe" style="display:none;"></iframe>
         
@@ -274,38 +494,47 @@
             const currentHebrewYear = getHebrewYear();
             document.getElementById('year').value = currentHebrewYear;
             
-            // הגדרת תאריך העדכון הנוכחי כברירת מחדל (נשלח אוטומטית על ידי הטופס)
-            
             // טיפול בשליחת הטופס
             const form = document.getElementById('torahSubmissionForm');
-            const statusMessage = document.getElementById('statusMessage');
+            const statusOverlay = document.getElementById('statusOverlay');
+            const statusPopup = document.getElementById('statusPopup');
             
             form.addEventListener('submit', function(e) {
                 // בדיקת תקינות הטופס
                 if (!form.checkValidity()) {
                     e.preventDefault();
-                    statusMessage.textContent = 'אנא מלא את כל השדות המסומנים ב-*';
-                    statusMessage.className = 'status-message status-error';
-                    statusMessage.style.display = 'block';
+                    
+                    // הצג הודעת שגיאה
+                    statusPopup.classList.remove('success');
+                    statusPopup.classList.add('error');
+                    statusPopup.querySelector('.status-title').textContent = 'שגיאה';
+                    statusPopup.querySelector('.status-message').textContent = 'אנא מלא את כל השדות המסומנים בכוכבית';
+                    statusOverlay.classList.add('active');
+                    
                     return;
                 }
                 
                 // אם הטופס תקין
                 // הטופס נשלח ל-iframe מוסתר
                 setTimeout(function() {
-                    statusMessage.textContent = 'דבר התורה נשלח בהצלחה!';
-                    statusMessage.className = 'status-message status-success';
-                    statusMessage.style.display = 'block';
+                    // הצגת חלון אישור
+                    statusPopup.classList.remove('error');
+                    statusPopup.classList.add('success');
+                    statusPopup.querySelector('.status-title').textContent = 'נשלח בהצלחה';
+                    statusPopup.querySelector('.status-message').textContent = 'דבר התורה נשלח בהצלחה ויוסף למאגר לאחר אישור.';
+                    statusOverlay.classList.add('active');
                     
                     // איפוס הטופס
                     form.reset();
                     document.getElementById('year').value = currentHebrewYear;
-                    
-                    // גלילה לראש הדף
-                    window.scrollTo(0, 0);
                 }, 1000);
             });
         });
+        
+        // פונקציה לסגירת חלון האישור
+        function closeStatusPopup() {
+            document.getElementById('statusOverlay').classList.remove('active');
+        }
         
         // פונקציה לחישוב השנה העברית הנוכחית
         function getHebrewYear() {

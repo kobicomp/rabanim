@@ -8,6 +8,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700&family=Rubik:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- הוספת ספריית עורך תוכן עשיר -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.snow.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/quill/1.3.7/quill.min.js"></script>
     <style>
         :root {
             --primary-color: #4062bb;
@@ -114,8 +117,7 @@
         }
         
         input[type="text"],
-        select,
-        textarea {
+        select {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid var(--input-border);
@@ -128,17 +130,10 @@
         }
         
         input[type="text"]:focus,
-        select:focus,
-        textarea:focus {
+        select:focus {
             outline: none;
             border-color: var(--input-focus);
             box-shadow: 0 0 0 3px rgba(64, 98, 187, 0.2);
-        }
-        
-        textarea {
-            min-height: 200px;
-            resize: vertical;
-            line-height: 1.6;
         }
         
         select {
@@ -307,6 +302,38 @@
             text-decoration: underline;
         }
         
+        /* סגנון עורך התוכן */
+        #editor-container {
+            height: 300px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            border: 1px solid var(--input-border);
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .ql-toolbar {
+            border-top-right-radius: 8px;
+            border-top-left-radius: 8px;
+            border-color: var(--input-border) !important;
+            background-color: #f8f9fa;
+        }
+        
+        .ql-container {
+            font-family: 'Rubik', 'Heebo', sans-serif !important;
+            font-size: 1rem !important;
+            border-bottom-right-radius: 8px;
+            border-bottom-left-radius: 8px;
+            border-color: var(--input-border) !important;
+        }
+        
+        .ql-editor {
+            min-height: 250px;
+            font-family: 'Rubik', 'Heebo', sans-serif;
+            direction: rtl;
+            text-align: right;
+        }
+        
         /* מותאם למסכים קטנים */
         @media (max-width: 768px) {
             form {
@@ -319,6 +346,10 @@
             
             .form-group {
                 margin-bottom: 1.2rem;
+            }
+            
+            #editor-container {
+                height: 250px;
             }
         }
         
@@ -333,8 +364,7 @@
             }
             
             input[type="text"],
-            select,
-            textarea {
+            select {
                 padding: 10px;
                 font-size: 0.95rem;
             }
@@ -346,6 +376,51 @@
             .status-popup {
                 padding: 1.5rem;
             }
+        }
+        
+        /* סגנון טאבים לאפשרויות עיצוב מתקדמות */
+        .editor-tabs {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        
+        .editor-tab {
+            padding: 8px 15px;
+            background-color: #f0f4f8;
+            border: 1px solid var(--input-border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            margin-left: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .editor-tab.active {
+            background-color: white;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .editor-tab:hover:not(.active) {
+            background-color: #e6ebf1;
+        }
+        
+        /* הצגת תצוגה מקדימה */
+        #preview-container {
+            border: 1px solid var(--input-border);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            background-color: white;
+            min-height: 100px;
+            display: none;
+        }
+        
+        .preview-title {
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--primary-color);
         }
     </style>
 </head>
@@ -435,7 +510,23 @@
             
             <div class="form-group">
                 <label for="content">תוכן <span class="required-mark">*</span></label>
-                <textarea id="content" name="entry.177859311" required placeholder="הזן כאן את תוכן דבר התורה. ניתן לכתוב HTML בסיסי לעיצוב התוכן (למשל, <b>מודגש</b>, <i>נטוי</i>, <br> לשורה חדשה)."></textarea>
+                
+                <div class="editor-tabs">
+                    <div class="editor-tab active" data-tab="editor">עריכה</div>
+                    <div class="editor-tab" data-tab="preview">תצוגה מקדימה</div>
+                </div>
+                
+                <!-- עורך טקסט עשיר -->
+                <div id="editor-container"></div>
+                
+                <!-- שדה מוסתר לשמירת התוכן HTML -->
+                <input type="hidden" id="content" name="entry.177859311" required>
+                
+                <!-- תצוגה מקדימה -->
+                <div id="preview-container">
+                    <div class="preview-title">תצוגה מקדימה:</div>
+                    <div id="preview-content"></div>
+                </div>
             </div>
             
             <div class="form-group">
@@ -445,7 +536,7 @@
             
             <div class="form-group">
                 <label for="year">שנה</label>
-                <input type="text" id="year" name="entry.982084268" placeholder="למשל: תשפ״ד">
+                <input type="text" id="year" name="entry.982084268" placeholder="למשל: תשפ״ה">
             </div>
             
             <div class="form-group">
@@ -490,6 +581,29 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // יצירת עורך התוכן העשיר
+            const quill = new Quill('#editor-container', {
+                modules: {
+                    toolbar: [
+                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                        ['bold', 'italic', 'underline', 'strike'],        
+                        [{ 'color': [] }, { 'background': [] }],
+                        [{ 'align': [] }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                        [{ 'indent': '-1'}, { 'indent': '+1' }],
+                        ['blockquote', 'code-block'],
+                        ['link', 'image'],
+                        ['clean']
+                    ]
+                },
+                placeholder: 'הזן כאן את תוכן דבר התורה...',
+                theme: 'snow'
+            });
+            
+            // כיוון שהעורך שלנו ב-LTR, אנחנו צריכים לוודא שהתוכן הוא RTL
+            quill.format('direction', 'rtl');
+            quill.format('align', 'right');
+            
             // מילוי שנה נוכחית כברירת מחדל
             const currentHebrewYear = getHebrewYear();
             document.getElementById('year').value = currentHebrewYear;
@@ -498,10 +612,15 @@
             const form = document.getElementById('torahSubmissionForm');
             const statusOverlay = document.getElementById('statusOverlay');
             const statusPopup = document.getElementById('statusPopup');
+            const contentInput = document.getElementById('content');
             
+            // לפני שליחת הטופס, שמור את התוכן HTML בשדה המוסתר
             form.addEventListener('submit', function(e) {
+                // שמירת התוכן HTML בשדה מוסתר
+                contentInput.value = quill.root.innerHTML;
+                
                 // בדיקת תקינות הטופס
-                if (!form.checkValidity()) {
+                if (!form.checkValidity() || quill.getText().trim().length === 0) {
                     e.preventDefault();
                     
                     // הצג הודעת שגיאה
@@ -526,8 +645,36 @@
                     
                     // איפוס הטופס
                     form.reset();
+                    quill.setContents([]);
                     document.getElementById('year').value = currentHebrewYear;
                 }, 1000);
+            });
+            
+            // טיפול בטאבים של עורך התוכן
+            const editorTabs = document.querySelectorAll('.editor-tab');
+            const editorContainer = document.getElementById('editor-container');
+            const previewContainer = document.getElementById('preview-container');
+            const previewContent = document.getElementById('preview-content');
+            
+            editorTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // הסרת active מכל הטאבים
+                    editorTabs.forEach(t => t.classList.remove('active'));
+                    // הוספת active לטאב הנוכחי
+                    this.classList.add('active');
+                    
+                    // החלפת תצוגה בהתאם לטאב שנבחר
+                    const tabId = this.getAttribute('data-tab');
+                    if (tabId === 'editor') {
+                        editorContainer.style.display = 'block';
+                        previewContainer.style.display = 'none';
+                    } else if (tabId === 'preview') {
+                        // עדכון תצוגה מקדימה
+                        previewContent.innerHTML = quill.root.innerHTML;
+                        editorContainer.style.display = 'none';
+                        previewContainer.style.display = 'block';
+                    }
+                });
             });
         });
         
@@ -538,9 +685,8 @@
         
         // פונקציה לחישוב השנה העברית הנוכחית
         function getHebrewYear() {
-            // אפשר לקבל את השנה העברית בקריאה לשירות חיצוני
-            // אבל בינתיים נחזיר ערך סטטי עבור תשפ״ד
-            return "תשפ״ד";
+            // החזרת תשפ״ה כברירת מחדל
+            return "תשפ״ה";
         }
     </script>
 </body>

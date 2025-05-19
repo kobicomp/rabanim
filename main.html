@@ -568,11 +568,6 @@
             // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה
             const [parasha, updateDate, title, content, author, isAvailable, year] = contentRow;
             
-            // עדכון כותרת העמוד עם השנה אם יש
-            if (year) {
-                document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${parasha} (${year})`;
-            }
-            
             const contentHtml = `
                 <div class="content-container">
                     <div class="content-header">

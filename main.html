@@ -78,21 +78,49 @@
             border-radius: 5px;
             border: 1px solid var(--border-color);
             background-color: white;
-            margin-right: 10px;
-        }
-        
-        .parasha-selector button {
-            padding: 8px 15px;
-            font-size: 1rem;
-            background-color: var(--accent-color);
-            color: white;
-            border: none;
-            border-radius: 5px;
             cursor: pointer;
+            min-width: 200px;
         }
         
-        .parasha-selector button:hover {
-            background-color: #e68a00;
+        .content-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+        
+        .content-card {
+            background-color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            padding: 10px;
+            min-width: 200px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .content-card:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        
+        .content-card.active {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(63, 81, 181, 0.3);
+        }
+        
+        .content-card h4 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            color: var(--primary-color);
+        }
+        
+        .content-card p {
+            margin: 0;
+            font-size: 0.8rem;
+            color: #666;
         }
         
         nav {
@@ -267,11 +295,10 @@
             </div>
             
             <div class="parasha-selector">
-                <select id="parasha-select">
-                    <option value="">בחר פרשה אחרת...</option>
+                <select id="parasha-select" onchange="loadParashaContent(this.value)">
+                    <option value="">בחר פרשה...</option>
                     <!-- רשימת הפרשות תיטען באמצעות JavaScript -->
                 </select>
-                <button id="load-parasha-btn">טען</button>
             </div>
             
             <nav>
@@ -292,6 +319,10 @@
     
     <main class="container">
         <h2 class="page-title">דבר תורה לפרשת השבוע</h2>
+        
+        <div id="content-selector" class="content-selector">
+            <!-- כאן יוצגו כרטיסיות של דברי תורה מרובים לפרשה -->
+        </div>
         
         <div id="content-area">
             <div class="loading">טוען את דבר התורה...</div>
@@ -343,14 +374,6 @@
                 option.textContent = parasha;
                 selectElement.appendChild(option);
             });
-            
-            // אירוע לחיצה על כפתור הטעינה
-            document.getElementById('load-parasha-btn').addEventListener('click', () => {
-                const selectedParasha = selectElement.value;
-                if (selectedParasha) {
-                    loadParashaContent(selectedParasha);
-                }
-            });
         }
         
         // פונקציה לקביעת הפרשה הנוכחית לפי התאריך
@@ -390,9 +413,21 @@
                 
                 console.log(`נמצאו ${parashaEntries.length} רשומות לפרשת ${parashaName}`);
                 
-                // אם יש רשומות לפרשה זו, הצג את הראשונה
+                // אם יש רשומות לפרשה זו, הצג אותן
                 if (parashaEntries.length > 0) {
+                    // הצג את הראשון כתוכן ראשי
                     displayContent(parashaEntries[0]);
+                    
+                    // הצג בוחר תוכן אם יש יותר מרשומה אחת
+                    if (parashaEntries.length > 1) {
+                        displayContentSelector(parashaEntries, 0); // האינדקס הראשון פעיל כברירת מחדל
+                    } else {
+                        // אם יש רק רשומה אחת, וודא שבוחר התוכן מוסתר
+                        const selectorContainer = document.getElementById('content-selector');
+                        if (selectorContainer) {
+                            selectorContainer.style.display = 'none';
+                        }
+                    }
                 } else {
                     // אם אין רשומות, הצג הודעה מתאימה
                     document.getElementById('content-area').innerHTML = `
@@ -405,6 +440,12 @@
                             </div>
                         </div>
                     `;
+                    
+                    // הסתר בוחר התוכן
+                    const selectorContainer = document.getElementById('content-selector');
+                    if (selectorContainer) {
+                        selectorContainer.style.display = 'none';
+                    }
                 }
                 
                 // טעינת ארכיון פרשות קודמות (מפרשות שונות)
@@ -428,6 +469,35 @@
                 `;
                 console.error('Error loading content:', error);
             }
+        }
+        
+        // פונקציה להצגת בוחר התוכן כשיש מספר דברי תורה לאותה פרשה
+        function displayContentSelector(entries, activeIndex) {
+            const selectorContainer = document.getElementById('content-selector');
+            selectorContainer.innerHTML = '';
+            selectorContainer.style.display = 'flex';
+            
+            entries.forEach((entry, index) => {
+                const [parasha, updateDate, title, content, author] = entry;
+                
+                const card = document.createElement('div');
+                card.className = `content-card ${index === activeIndex ? 'active' : ''}`;
+                card.innerHTML = `
+                    <h4>${title}</h4>
+                    <p>מאת: ${author}</p>
+                `;
+                
+                card.addEventListener('click', function() {
+                    // הסר את המחלקה 'active' מכל הכרטיסיות
+                    document.querySelectorAll('.content-card').forEach(c => c.classList.remove('active'));
+                    // הוסף את המחלקה 'active' לכרטיסיה הנוכחית
+                    this.classList.add('active');
+                    // הצג את התוכן המתאים
+                    displayContent(entries[index]);
+                });
+                
+                selectorContainer.appendChild(card);
+            });
         }
         
         // פונקציה פשוטה לפרסור CSV

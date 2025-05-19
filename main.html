@@ -378,9 +378,19 @@
                 
                 // נחפש את השורה המתאימה לפרשה הנוכחית
                 let contentRow = null;
-                for (let i = rows.length - 1; i >= 0; i--) {
-                    if (rows[i][0] === parashaName) {
+                
+                // הדפסת כל השורות לצורכי דיבוג (אפשר להסיר אחרי שמוודאים שהכל עובד)
+                console.log("כל השורות מהגיליון:", rows);
+                
+                for (let i = 0; i < rows.length; i++) {
+                    console.log(`שורה ${i}:`, rows[i]);
+                    // בדיקה שהשורה מכילה מספיק עמודות
+                    if (rows[i].length < 1) continue;
+                    
+                    // בדיקה אם העמודה הראשונה (פרשה) תואמת את הפרשה המבוקשת
+                    if (rows[i][0] && rows[i][0].trim() === parashaName) {
                         contentRow = rows[i];
+                        console.log("נמצאה התאמה לפרשה:", parashaName, contentRow);
                         break;
                     }
                 }
@@ -388,6 +398,7 @@
                 // אם לא מצאנו תוכן ספציפי לפרשה, נשתמש בשורה האחרונה
                 if (!contentRow && rows.length > 0) {
                     contentRow = rows[rows.length - 1];
+                    console.log("לא נמצאה התאמה לפרשה, משתמש בשורה האחרונה:", contentRow);
                 }
                 
                 // הצגת התוכן הראשי
@@ -429,6 +440,8 @@
             const rows = [];
             const lines = text.split('\n');
             
+            console.log("מספר שורות בקובץ CSV:", lines.length);
+            
             // נדלג על שורת הכותרות
             for (let i = 1; i < lines.length; i++) {
                 if (lines[i].trim() === '') continue;
@@ -455,6 +468,7 @@
                 rows.push(row);
             }
             
+            console.log("שורות לאחר פרסור:", rows);
             return rows;
         }
         

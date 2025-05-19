@@ -123,6 +123,16 @@
             color: #666;
         }
         
+        .content-card .year-tag {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.7rem;
+            margin-top: 5px;
+        }
+        
         nav {
             display: flex;
             justify-content: center;
@@ -189,6 +199,16 @@
             font-size: 0.9rem;
             color: #666;
             margin-top: 0.5rem;
+        }
+        
+        .year-badge {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 10px;
         }
         
         .content-body {
@@ -406,12 +426,14 @@
                 // נפרסר את ה-CSV
                 const rows = parseCSV(csvText);
                 
-                // נסנן רק את הרשומות עבור הפרשה הנוכחית
+                // נסנן רק את הרשומות הזמינות עבור הפרשה הנוכחית
                 const parashaEntries = rows.filter(row => 
-                    row.length > 0 && row[0].trim() === parashaName.trim()
+                    row.length > 5 && 
+                    row[0].trim() === parashaName.trim() &&
+                    (row[5].trim().toLowerCase() === "כן" || row[5].trim().toLowerCase() === "yes" || row[5].trim() === "1")
                 );
                 
-                console.log(`נמצאו ${parashaEntries.length} רשומות לפרשת ${parashaName}`);
+                console.log(`נמצאו ${parashaEntries.length} רשומות זמינות לפרשת ${parashaName}`);
                 
                 // אם יש רשומות לפרשה זו, הצג אותן
                 if (parashaEntries.length > 0) {
@@ -448,9 +470,11 @@
                     }
                 }
                 
-                // טעינת ארכיון פרשות קודמות (מפרשות שונות)
+                // טעינת ארכיון פרשות קודמות (מפרשות שונות) - רק פריטים זמינים
                 const otherParashot = rows.filter(row => 
-                    row.length > 0 && row[0].trim() !== parashaName.trim()
+                    row.length > 5 && 
+                    row[0].trim() !== parashaName.trim() &&
+                    (row[5].trim().toLowerCase() === "כן" || row[5].trim().toLowerCase() === "yes" || row[5].trim() === "1")
                 );
                 
                 loadArchiveItems(otherParashot);
@@ -478,13 +502,15 @@
             selectorContainer.style.display = 'flex';
             
             entries.forEach((entry, index) => {
-                const [parasha, updateDate, title, content, author] = entry;
+                // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה
+                const [parasha, updateDate, title, content, author, isAvailable, year] = entry;
                 
                 const card = document.createElement('div');
                 card.className = `content-card ${index === activeIndex ? 'active' : ''}`;
                 card.innerHTML = `
                     <h4>${title}</h4>
                     <p>מאת: ${author}</p>
+                    ${year ? `<span class="year-tag">${year}</span>` : ''}
                 `;
                 
                 card.addEventListener('click', function() {
@@ -539,13 +565,21 @@
         
         // הצגת התוכן הראשי בעמוד
         function displayContent(contentRow) {
-            // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב
-            const [parasha, updateDate, title, content, author] = contentRow;
+            // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה
+            const [parasha, updateDate, title, content, author, isAvailable, year] = contentRow;
+            
+            // עדכון כותרת העמוד עם השנה אם יש
+            if (year) {
+                document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${parasha} (${year})`;
+            }
             
             const contentHtml = `
                 <div class="content-container">
                     <div class="content-header">
-                        <h3 class="content-title">${title}</h3>
+                        <h3 class="content-title">
+                            ${year ? `<span class="year-badge">${year}</span>` : ''}
+                            ${title}
+                        </h3>
                         <div class="content-meta">
                             <span>מאת: ${author}</span> | 
                             <span>עודכן בתאריך: ${updateDate}</span>
@@ -581,7 +615,8 @@
                 // ודא שיש מספיק עמודות בשורה
                 if (row.length < 5) continue;
                 
-                const [parasha, updateDate, title, content, author] = row;
+                // בהנחה שהעמודות בסדר: פרשה, תאריך עדכון, כותרת, תוכן, כותב, זמין, שנה
+                const [parasha, updateDate, title, content, author, isAvailable, year] = row;
                 
                 // דלג על שורות לא תקינות
                 if (!parasha || !title) continue;
@@ -593,7 +628,7 @@
                 archiveItem.className = 'archive-item';
                 archiveItem.innerHTML = `
                     <h4>${title}</h4>
-                    <p>פרשת ${parasha}</p>
+                    <p>פרשת ${parasha} ${year ? `(${year})` : ''}</p>
                     <p>מאת: ${author}</p>
                     <a href="#" onclick="loadParashaContent('${parasha}'); return false;">לקריאה</a>
                 `;

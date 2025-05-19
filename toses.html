@@ -683,7 +683,7 @@
                     } else if (tabId === 'preview') {
                         // עדכון תצוגה מקדימה עם התוכן המעוצב
                         const htmlContent = quill.root.innerHTML;
-                        const processedHtml = preserveAlignment(htmlContent);
+                        const processedHtml = enhanceContent(htmlContent);
                         previewContent.innerHTML = processedHtml;
                         editorContainer.style.display = 'none';
                         previewContainer.style.display = 'block';
@@ -691,33 +691,49 @@
                 });
             });
             
-            // פונקציה לשימור מאפייני היישור בתוכן
-            function preserveAlignment(html) {
-                // החלפת מחלקות CSS של Quill לאטריביוטים סגנון ישירים
-                // כדי לוודא שהיישור עובד בכל מקום
-                let processedHtml = html
-                    .replace(/<p class="ql-align-center">/g, '<p style="text-align: center;">')
-                    .replace(/<p class="ql-align-right">/g, '<p style="text-align: right;">')
-                    .replace(/<p class="ql-align-left">/g, '<p style="text-align: left;">')
-                    .replace(/<p class="ql-align-justify">/g, '<p style="text-align: justify;">');
+            // פונקציה חדשה - משפרת את התוכן עם מחלקות משלימות ומבנה HTML טוב
+            function enhanceContent(html) {
+                // הוסף div עוטף עם מחלקה מיוחדת שתאפשר סגנונות מיוחדים
+                let processedHtml = '<div class="rich-text-content">';
                 
-                // טיפול במקרים בהם יש מספר מחלקות
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-center([^"]*)"/g, 'class="$1$2" style="text-align: center;"');
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-center([^"]*)"/g, 'class="$1$2" style="text-align: center;"');
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-right([^"]*)"/g, 'class="$1$2" style="text-align: right;"');
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-left([^"]*)"/g, 'class="$1$2" style="text-align: left;"');
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-justify([^"]*)"/g, 'class="$1$2" style="text-align: justify;"');
+                // שפר יישורי טקסט
+                processedHtml += html
+                    // טיפול ביישורים בפסקאות
+                    .replace(/<p class="ql-align-center">/g, '<p class="ql-align-center" style="text-align: center !important;" align="center">')
+                    .replace(/<p class="ql-align-right">/g, '<p class="ql-align-right" style="text-align: right !important;" align="right">')
+                    .replace(/<p class="ql-align-left">/g, '<p class="ql-align-left" style="text-align: left !important;" align="left">')
+                    .replace(/<p class="ql-align-center">/g, '<p class="ql-align-center" style="text-align: center !important;" align="center">')
+                    .replace(/<p class="ql-align-right">/g, '<p class="ql-align-right" style="text-align: right !important;" align="right">')
+                    .replace(/<p class="ql-align-left">/g, '<p class="ql-align-left" style="text-align: left !important;" align="left">')
+                    .replace(/<p class="ql-align-justify">/g, '<p class="ql-align-justify" style="text-align: justify !important;" align="justify">')
+                    
+                    // טיפול ביישורים באלמנטים אחרים
+                    .replace(/<(h[1-6]) class="ql-align-center">/g, '<$1 class="ql-align-center" style="text-align: center !important;" align="center">')
+                    .replace(/<(h[1-6]) class="ql-align-right">/g, '<$1 class="ql-align-right" style="text-align: right !important;" align="right">')
+                    .replace(/<(h[1-6]) class="ql-align-left">/g, '<$1 class="ql-align-left" style="text-align: left !important;" align="left">')
+                    .replace(/<(h[1-6]) class="ql-align-justify">/g, '<$1 class="ql-align-justify" style="text-align: justify !important;" align="justify">')
+                    
+                    // הוסף style ישיר לצבעי טקסט ורקע
+                    .replace(/<span class="ql-color-([^"]+)">/g, '<span class="ql-color-$1" style="color: $1 !important;">')
+                    .replace(/<span class="ql-background-([^"]+)">/g, '<span class="ql-background-$1" style="background-color: $1 !important;">')
+                    
+                    // טיפול במקרה של span שכבר יש לו style עם צבע
+                    .replace(/color: ([^;\"]+)/g, 'color: $1 !important')
+                    .replace(/background-color: ([^;\"]+)/g, 'background-color: $1 !important');
+                
+                // סגירת הdiv העוטף
+                processedHtml += '</div>';
                 
                 return processedHtml;
             }
             
             // לפני שליחת הטופס, שמור את התוכן HTML בשדה המוסתר
             form.addEventListener('submit', function(e) {
-                // שמירת התוכן HTML בשדה מוסתר עם שמירה על מאפייני יישור
+                // שמירת התוכן HTML בשדה מוסתר עם שמירה על מאפייני יישור וצבעים
                 const htmlContent = quill.root.innerHTML;
                 
-                // וידוא שמאפייני היישור נשמרים כראוי
-                const processedHtml = preserveAlignment(htmlContent);
+                // וידוא שמאפייני היישור והצבע נשמרים כראוי
+                const processedHtml = enhanceContent(htmlContent);
                 contentInput.value = processedHtml;
                 
                 // בדיקת תקינות הטופס

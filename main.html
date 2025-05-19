@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דברי תורה שבועיים - מבואה</title>
+    <link rel="icon" href="data:,">
     <style>
         :root {
             --primary-color: #3f51b5;
@@ -330,6 +331,11 @@
         function loadParashotOptions() {
             const selectElement = document.getElementById('parasha-select');
             
+            // ניקוי אפשרויות קיימות פרט לאפשרות הראשונה
+            while (selectElement.options.length > 1) {
+                selectElement.remove(1);
+            }
+            
             // מילוי אפשרויות הבחירה
             parashot.forEach(parasha => {
                 const option = document.createElement('option');
@@ -352,8 +358,8 @@
             // במקור, כאן אפשר להשתמש באלגוריתם מורכב יותר לחישוב הפרשה הנוכחית
             // לצורך הדוגמה, נשתמש בפרשה קבועה
             
-            // בהמשך אפשר להוסיף לוח שנה עברי ולחשב את הפרשה הנוכחית
-            return "בהעלותך"; // דוגמה לפרשה נוכחית
+            // לדוגמה - פרשת השבוע הנוכחית
+            return "בהעלותך";
         }
         
         // פונקציה לטעינת התוכן מגוגל שיטס
@@ -406,7 +412,7 @@
                     row.length > 0 && row[0].trim() !== parashaName.trim()
                 );
                 
-                loadArchiveItems(otherParashot, parashaName);
+                loadArchiveItems(otherParashot);
                 
             } catch (error) {
                 document.getElementById('content-area').innerHTML = `
@@ -417,41 +423,6 @@
                         <div class="content-body">
                             <p>לא ניתן לטעון את התוכן כרגע. אנא נסה שוב מאוחר יותר.</p>
                             <p>פרטי השגיאה: ${error.message}</p>
-                        </div>
-                    </div>
-                `;
-                console.error('Error loading content:', error);
-            }
-        }
-                
-                // הצגת התוכן הראשי
-                if (parashaEntries.length > 0) {
-                    displayContent(parashaEntries[0]);
-                } else {
-                    // אם אין רשומות, הצג הודעה מתאימה
-                    document.getElementById('content-area').innerHTML = `
-                        <div class="content-container">
-                            <div class="content-header">
-                                <h3 class="content-title">אין תוכן זמין</h3>
-                            </div>
-                            <div class="content-body">
-                                <p>אין כרגע דבר תורה זמין לפרשת ${parashaName}.</p>
-                            </div>
-                        </div>
-                    `;
-                }
-                
-                // טעינת ארכיון פרשות קודמות
-                loadArchiveItems(rows, parashaName);
-                
-            } catch (error) {
-                document.getElementById('content-area').innerHTML = `
-                    <div class="content-container">
-                        <div class="content-header">
-                            <h3 class="content-title">שגיאה בטעינת התוכן</h3>
-                        </div>
-                        <div class="content-body">
-                            <p>לא ניתן לטעון את התוכן כרגע. אנא נסה שוב מאוחר יותר.</p>
                         </div>
                     </div>
                 `;
@@ -520,7 +491,7 @@
         }
         
         // טעינת ארכיון פרשות קודמות
-        function loadArchiveItems(rows, currentParasha) {
+        function loadArchiveItems(rows) {
             const archiveContainer = document.getElementById('archive-items');
             archiveContainer.innerHTML = '';
             

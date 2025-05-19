@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דברי תורה שבועיים - מבואה</title>
     <link rel="icon" href="data:,">
+    <!-- הוספת ספריית הלוח העברי -->
+    <script src="https://unpkg.com/@hebcal/core@4.3.2/dist/bundle.min.js"></script>
     <style>
         :root {
             --primary-color: #3f51b5;
@@ -56,6 +58,13 @@
             text-align: center;
             margin-bottom: 1rem;
             color: #555;
+        }
+        
+        .hebrew-date {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 0.8rem;
         }
         
         .parasha-banner {
@@ -310,6 +319,9 @@
             <h1 class="site-title">דברי תורה שבועיים</h1>
             <p class="site-subtitle">מאת רבני בית הספר</p>
             
+            <!-- הוספת תצוגת תאריך עברי -->
+            <div class="hebrew-date" id="hebrew-date">טוען תאריך עברי...</div>
+            
             <div class="parasha-banner" id="current-parasha-banner">
                 פרשת השבוע: <span id="current-parasha-name">טוען...</span>
             </div>
@@ -368,15 +380,149 @@
         const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSuqfhHb4HdLcP3WLMT33O61cP_5bQrryiZ-qVSPiAfQNaWCi32iNePVcOdFM7faykcbUX-FpoTuYdE/pub?output=csv';
         // ========================================
         
-        // רשימת פרשות השבוע
+        // טבלת המרה של שמות פרשות מאנגלית לעברית
+        const parashaTranslation = {
+            'Bereshit': 'בראשית',
+            'Noach': 'נח',
+            'Lech-Lecha': 'לך לך',
+            'Vayera': 'וירא',
+            'Chayei Sara': 'חיי שרה',
+            'Toldot': 'תולדות',
+            'Vayetzei': 'ויצא',
+            'Vayishlach': 'וישלח',
+            'Vayeshev': 'וישב',
+            'Miketz': 'מקץ',
+            'Vayigash': 'ויגש',
+            'Vayechi': 'ויחי',
+            'Shemot': 'שמות',
+            'Vaera': 'וארא',
+            'Bo': 'בא',
+            'Beshalach': 'בשלח',
+            'Yitro': 'יתרו',
+            'Mishpatim': 'משפטים',
+            'Terumah': 'תרומה',
+            'Tetzaveh': 'תצוה',
+            'Ki Tisa': 'כי תשא',
+            'Vayakhel': 'ויקהל',
+            'Pekudei': 'פקודי',
+            'Vayikra': 'ויקרא',
+            'Tzav': 'צו',
+            'Shmini': 'שמיני',
+            'Tazria': 'תזריע',
+            'Metzora': 'מצורע',
+            'Achrei Mot': 'אחרי מות',
+            'Kedoshim': 'קדושים',
+            'Emor': 'אמור',
+            'Behar': 'בהר',
+            'Bechukotai': 'בחוקותי',
+            'Bamidbar': 'במדבר',
+            'Nasso': 'נשא',
+            'Beha\'alotcha': 'בהעלותך',
+            'Sh\'lach': 'שלח',
+            'Korach': 'קרח',
+            'Chukat': 'חקת',
+            'Balak': 'בלק',
+            'Pinchas': 'פינחס',
+            'Matot': 'מטות',
+            'Masei': 'מסעי',
+            'Devarim': 'דברים',
+            'Vaetchanan': 'ואתחנן',
+            'Eikev': 'עקב',
+            'Re\'eh': 'ראה',
+            'Shoftim': 'שופטים',
+            'Ki Teitzei': 'כי תצא',
+            'Ki Tavo': 'כי תבוא',
+            'Nitzavim': 'ניצבים',
+            'Vayeilech': 'וילך',
+            'Ha\'Azinu': 'האזינו',
+            'Vezot Haberakhah': 'וזאת הברכה',
+            // פרשות כפולות
+            'Vayakhel-Pekudei': 'ויקהל-פקודי',
+            'Tazria-Metzora': 'תזריע-מצורע',
+            'Achrei Mot-Kedoshim': 'אחרי מות-קדושים',
+            'Behar-Bechukotai': 'בהר-בחוקותי',
+            'Chukat-Balak': 'חקת-בלק',
+            'Matot-Masei': 'מטות-מסעי',
+            'Nitzavim-Vayeilech': 'ניצבים-וילך'
+        };
+        
+        // רשימת פרשות השבוע כפי שהיא קיימת בגיליון
         const parashot = [
             "בראשית", "נח", "לך לך", "וירא", "חיי שרה", "תולדות", "ויצא", "וישלח", "וישב", "מקץ",
             "ויגש", "ויחי", "שמות", "וארא", "בא", "בשלח", "יתרו", "משפטים", "תרומה", "תצוה",
             "כי תשא", "ויקהל", "פקודי", "ויקרא", "צו", "שמיני", "תזריע", "מצורע", "אחרי מות", "קדושים",
             "אמור", "בהר", "בחוקותי", "במדבר", "נשא", "בהעלותך", "שלח", "קרח", "חקת", "בלק",
             "פינחס", "מטות", "מסעי", "דברים", "ואתחנן", "עקב", "ראה", "שופטים", "כי תצא", "כי תבוא",
-            "ניצבים", "וילך", "האזינו", "וזאת הברכה"
+            "ניצבים", "וילך", "האזינו", "וזאת הברכה",
+            // פרשות כפולות
+            "ויקהל-פקודי", "תזריע-מצורע", "אחרי מות-קדושים", "בהר-בחוקותי", 
+            "חקת-בלק", "מטות-מסעי", "ניצבים-וילך"
         ];
+        
+        // פונקציה להצגת התאריך העברי
+        function displayHebrewDate() {
+            try {
+                // השתמש בספרייה hebcal לקבלת התאריך העברי
+                const today = new Hebcal.HDate();
+                const formatter = new Hebcal.HebrewDateFormatter();
+                formatter.setHebrewFormat(true);
+                
+                const hebrewDate = formatter.format(today);
+                document.getElementById('hebrew-date').textContent = hebrewDate;
+            } catch (error) {
+                console.error('שגיאה בחישוב התאריך העברי:', error);
+                document.getElementById('hebrew-date').textContent = 'לא ניתן להציג את התאריך העברי';
+            }
+        }
+        
+        // פונקציה לקביעת הפרשה הנוכחית לפי התאריך
+        function getCurrentParasha() {
+            try {
+                // קבל את התאריך הנוכחי
+                const today = new Date();
+                
+                // מצא את השבת הבאה (אם היום שבת, השתמש בתאריך הנוכחי)
+                const dayOfWeek = today.getDay(); // 0 = ראשון, 6 = שבת
+                const daysUntilNextShabbat = dayOfWeek === 6 ? 0 : 6 - dayOfWeek;
+                
+                const nextShabbat = new Date(today);
+                nextShabbat.setDate(today.getDate() + daysUntilNextShabbat);
+                
+                // המר לתאריך עברי
+                const hDate = new Hebcal.HDate(nextShabbat);
+                
+                // קבל את פרשת השבוע
+                const sedra = Hebcal.HebrewCalendar.getSedra(hDate.getFullYear(), hDate.getMonth() + 1, hDate.getDate());
+                
+                // אם אין פרשה (למשל חג), נסה את השבת הבאה
+                if (!sedra || !sedra.parsha || sedra.parsha.length === 0) {
+                    const nextNextShabbat = new Date(nextShabbat);
+                    nextNextShabbat.setDate(nextShabbat.getDate() + 7);
+                    
+                    const nextHDate = new Hebcal.HDate(nextNextShabbat);
+                    const nextSedra = Hebcal.HebrewCalendar.getSedra(
+                        nextHDate.getFullYear(), 
+                        nextHDate.getMonth() + 1, 
+                        nextHDate.getDate()
+                    );
+                    
+                    if (nextSedra && nextSedra.parsha && nextSedra.parsha.length > 0) {
+                        // המר לעברית
+                        const parshaNames = nextSedra.parsha.map(p => parashaTranslation[p] || p);
+                        return parshaNames.join('-');
+                    }
+                    
+                    return "בראשית"; // ברירת מחדל אם אין פרשה גם בשבת הבאה
+                }
+                
+                // המר לעברית
+                const parshaNames = sedra.parsha.map(p => parashaTranslation[p] || p);
+                return parshaNames.join('-');
+            } catch (error) {
+                console.error('שגיאה בחישוב פרשת השבוע:', error);
+                return "בראשית"; // ברירת מחדל במקרה של שגיאה
+            }
+        }
         
         // פונקציה לטעינת בחירת הפרשות
         function loadParashotOptions() {
@@ -387,22 +533,22 @@
                 selectElement.remove(1);
             }
             
+            // קבל את הפרשה הנוכחית
+            const currentParasha = getCurrentParasha();
+            
             // מילוי אפשרויות הבחירה
             parashot.forEach(parasha => {
                 const option = document.createElement('option');
                 option.value = parasha;
                 option.textContent = parasha;
+                
+                // סמן את הפרשה הנוכחית כנבחרת
+                if (parasha === currentParasha) {
+                    option.selected = true;
+                }
+                
                 selectElement.appendChild(option);
             });
-        }
-        
-        // פונקציה לקביעת הפרשה הנוכחית לפי התאריך
-        function getCurrentParasha() {
-            // במקור, כאן אפשר להשתמש באלגוריתם מורכב יותר לחישוב הפרשה הנוכחית
-            // לצורך הדוגמה, נשתמש בפרשה קבועה
-            
-            // לדוגמה - פרשת השבוע הנוכחית
-            return "בהעלותך";
         }
         
         // פונקציה לטעינת התוכן מגוגל שיטס
@@ -426,10 +572,18 @@
                 // נפרסר את ה-CSV
                 const rows = parseCSV(csvText);
                 
-                // נסנן רק את הרשומות הזמינות עבור הפרשה הנוכחית
+                // טיפול בפרשות כפולות - בדוק הן את הפרשה המלאה והן את החלקים
+                let searchParashas = [parashaName];
+                if (parashaName.includes('-')) {
+                    // פרק את הפרשה הכפולה לחלקים
+                    const parts = parashaName.split('-');
+                    searchParashas = [...searchParashas, ...parts];
+                }
+                
+                // נסנן רק את הרשומות הזמינות עבור הפרשה הנוכחית או חלקיה
                 const parashaEntries = rows.filter(row => 
                     row.length > 5 && 
-                    row[0].trim() === parashaName.trim() &&
+                    searchParashas.includes(row[0].trim()) &&
                     (row[5].trim().toLowerCase() === "כן" || row[5].trim().toLowerCase() === "yes" || row[5].trim() === "1")
                 );
                 
@@ -473,7 +627,7 @@
                 // טעינת ארכיון פרשות קודמות (מפרשות שונות) - רק פריטים זמינים
                 const otherParashot = rows.filter(row => 
                     row.length > 5 && 
-                    row[0].trim() !== parashaName.trim() &&
+                    !searchParashas.includes(row[0].trim()) &&
                     (row[5].trim().toLowerCase() === "כן" || row[5].trim().toLowerCase() === "yes" || row[5].trim() === "1")
                 );
                 
@@ -530,7 +684,6 @@
         function parseCSV(text) {
             const rows = [];
             const lines = text.split('\n');
-            
             console.log("מספר שורות בקובץ CSV:", lines.length);
             
             // נדלג על שורת הכותרות
@@ -639,7 +792,13 @@
         
         // אתחול הדף כשהוא נטען
         window.addEventListener('DOMContentLoaded', () => {
+            // הצג תאריך עברי
+            displayHebrewDate();
+            
+            // טען את רשימת הפרשות עם הפרשה הנוכחית מסומנת
             loadParashotOptions();
+            
+            // טען את התוכן של הפרשה הנוכחית
             loadParashaContent();
         });
     </script>

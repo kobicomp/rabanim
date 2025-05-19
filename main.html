@@ -366,6 +366,7 @@
                 
                 // עדכון שם הפרשה בכותרת
                 document.getElementById('current-parasha-name').textContent = parashaName;
+                document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${parashaName}`;
                 
                 // כאן נשתמש בקישור המוגדר בתחילת הקובץ
                 const url = SHEET_URL;
@@ -376,35 +377,58 @@
                 // נפרסר את ה-CSV
                 const rows = parseCSV(csvText);
                 
-                // נחפש את השורה המתאימה לפרשה הנוכחית
-                let contentRow = null;
+                // נסנן רק את הרשומות עבור הפרשה הנוכחית
+                const parashaEntries = rows.filter(row => 
+                    row.length > 0 && row[0].trim() === parashaName.trim()
+                );
                 
-                // הדפסת כל השורות לצורכי דיבוג (אפשר להסיר אחרי שמוודאים שהכל עובד)
-                console.log("כל השורות מהגיליון:", rows);
+                console.log(`נמצאו ${parashaEntries.length} רשומות לפרשת ${parashaName}`);
                 
-                for (let i = 0; i < rows.length; i++) {
-                    console.log(`שורה ${i}:`, rows[i]);
-                    // בדיקה שהשורה מכילה מספיק עמודות
-                    if (rows[i].length < 1) continue;
-                    
-                    // בדיקה אם העמודה הראשונה (פרשה) תואמת את הפרשה המבוקשת
-                    if (rows[i][0] && rows[i][0].trim() === parashaName) {
-                        contentRow = rows[i];
-                        console.log("נמצאה התאמה לפרשה:", parashaName, contentRow);
-                        break;
-                    }
+                // אם יש רשומות לפרשה זו, הצג את הראשונה
+                if (parashaEntries.length > 0) {
+                    displayContent(parashaEntries[0]);
+                } else {
+                    // אם אין רשומות, הצג הודעה מתאימה
+                    document.getElementById('content-area').innerHTML = `
+                        <div class="content-container">
+                            <div class="content-header">
+                                <h3 class="content-title">אין תוכן זמין</h3>
+                            </div>
+                            <div class="content-body">
+                                <p>אין כרגע דבר תורה זמין לפרשת ${parashaName}.</p>
+                            </div>
+                        </div>
+                    `;
                 }
                 
-                // אם לא מצאנו תוכן ספציפי לפרשה, נשתמש בשורה האחרונה
-                if (!contentRow && rows.length > 0) {
-                    contentRow = rows[rows.length - 1];
-                    console.log("לא נמצאה התאמה לפרשה, משתמש בשורה האחרונה:", contentRow);
-                }
+                // טעינת ארכיון פרשות קודמות (מפרשות שונות)
+                const otherParashot = rows.filter(row => 
+                    row.length > 0 && row[0].trim() !== parashaName.trim()
+                );
+                
+                loadArchiveItems(otherParashot, parashaName);
+                
+            } catch (error) {
+                document.getElementById('content-area').innerHTML = `
+                    <div class="content-container">
+                        <div class="content-header">
+                            <h3 class="content-title">שגיאה בטעינת התוכן</h3>
+                        </div>
+                        <div class="content-body">
+                            <p>לא ניתן לטעון את התוכן כרגע. אנא נסה שוב מאוחר יותר.</p>
+                            <p>פרטי השגיאה: ${error.message}</p>
+                        </div>
+                    </div>
+                `;
+                console.error('Error loading content:', error);
+            }
+        }
                 
                 // הצגת התוכן הראשי
-                if (contentRow) {
-                    displayContent(contentRow);
+                if (parashaEntries.length > 0) {
+                    displayContent(parashaEntries[0]);
                 } else {
+                    // אם אין רשומות, הצג הודעה מתאימה
                     document.getElementById('content-area').innerHTML = `
                         <div class="content-container">
                             <div class="content-header">
@@ -495,13 +519,14 @@
             document.getElementById('content-area').innerHTML = contentHtml;
         }
         
-        // טעינת פריטי ארכיון
+        // טעינת ארכיון פרשות קודמות
         function loadArchiveItems(rows, currentParasha) {
             const archiveContainer = document.getElementById('archive-items');
             archiveContainer.innerHTML = '';
             
             // מיון השורות לפי תאריך (מהחדש לישן)
             rows.sort((a, b) => {
+                if (a.length < 2 || b.length < 2) return 0;
                 const dateA = new Date(a[1]);
                 const dateB = new Date(b[1]);
                 return dateB - dateA;
@@ -512,10 +537,13 @@
             let count = 0;
             
             for (const row of rows) {
+                // ודא שיש מספיק עמודות בשורה
+                if (row.length < 5) continue;
+                
                 const [parasha, updateDate, title, content, author] = row;
                 
-                // דלג על הפרשה הנוכחית
-                if (parasha === currentParasha) continue;
+                // דלג על שורות לא תקינות
+                if (!parasha || !title) continue;
                 
                 // הגבלת מספר הפריטים
                 if (count >= maxItems) break;

@@ -334,48 +334,27 @@
             text-align: right;
         }
         
-        /* מותאם למסכים קטנים */
-        @media (max-width: 768px) {
-            form {
-                padding: 1.5rem;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .form-group {
-                margin-bottom: 1.2rem;
-            }
-            
-            #editor-container {
-                height: 250px;
-            }
+        /* עיצוב לתצוגה מקדימה וסגנונות יישור */
+        #preview-content {
+            direction: rtl;
+            font-family: 'Rubik', 'Heebo', sans-serif;
         }
         
-        /* מותאם לטלפונים קטנים */
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px 10px;
-            }
-            
-            form {
-                padding: 1.2rem;
-            }
-            
-            input[type="text"],
-            select {
-                padding: 10px;
-                font-size: 0.95rem;
-            }
-            
-            h1 {
-                font-size: 1.3rem;
-            }
-            
-            .status-popup {
-                padding: 1.5rem;
-            }
+        /* תיקון למרכוז ויישורי טקסט */
+        .ql-align-center, #preview-content .ql-align-center {
+            text-align: center !important;
+        }
+        
+        .ql-align-right, #preview-content .ql-align-right {
+            text-align: right !important;
+        }
+        
+        .ql-align-left, #preview-content .ql-align-left {
+            text-align: left !important;
+        }
+        
+        .ql-align-justify, #preview-content .ql-align-justify {
+            text-align: justify !important;
         }
         
         /* סגנון טאבים לאפשרויות עיצוב מתקדמות */
@@ -421,6 +400,75 @@
             margin-bottom: 10px;
             font-weight: 500;
             color: var(--primary-color);
+        }
+        
+        /* סגנונות נוספים לתצוגה נכונה של יישורים */
+        p {
+            margin-bottom: 0.8em;
+        }
+        
+        [style*="text-align: center"] {
+            text-align: center !important;
+            display: block;
+        }
+        
+        [style*="text-align: right"] {
+            text-align: right !important;
+            display: block;
+        }
+        
+        [style*="text-align: left"] {
+            text-align: left !important;
+            display: block;
+        }
+        
+        [style*="text-align: justify"] {
+            text-align: justify !important;
+            display: block;
+        }
+        
+        /* מותאם למסכים קטנים */
+        @media (max-width: 768px) {
+            form {
+                padding: 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .form-group {
+                margin-bottom: 1.2rem;
+            }
+            
+            #editor-container {
+                height: 250px;
+            }
+        }
+        
+        /* מותאם לטלפונים קטנים */
+        @media (max-width: 480px) {
+            .container {
+                padding: 15px 10px;
+            }
+            
+            form {
+                padding: 1.2rem;
+            }
+            
+            input[type="text"],
+            select {
+                padding: 10px;
+                font-size: 0.95rem;
+            }
+            
+            h1 {
+                font-size: 1.3rem;
+            }
+            
+            .status-popup {
+                padding: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -614,10 +662,63 @@
             const statusPopup = document.getElementById('statusPopup');
             const contentInput = document.getElementById('content');
             
+            // טיפול בטאבים של עורך התוכן
+            const editorTabs = document.querySelectorAll('.editor-tab');
+            const editorContainer = document.getElementById('editor-container');
+            const previewContainer = document.getElementById('preview-container');
+            const previewContent = document.getElementById('preview-content');
+            
+            editorTabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // הסרת active מכל הטאבים
+                    editorTabs.forEach(t => t.classList.remove('active'));
+                    // הוספת active לטאב הנוכחי
+                    this.classList.add('active');
+                    
+                    // החלפת תצוגה בהתאם לטאב שנבחר
+                    const tabId = this.getAttribute('data-tab');
+                    if (tabId === 'editor') {
+                        editorContainer.style.display = 'block';
+                        previewContainer.style.display = 'none';
+                    } else if (tabId === 'preview') {
+                        // עדכון תצוגה מקדימה עם התוכן המעוצב
+                        const htmlContent = quill.root.innerHTML;
+                        const processedHtml = preserveAlignment(htmlContent);
+                        previewContent.innerHTML = processedHtml;
+                        editorContainer.style.display = 'none';
+                        previewContainer.style.display = 'block';
+                    }
+                });
+            });
+            
+            // פונקציה לשימור מאפייני היישור בתוכן
+            function preserveAlignment(html) {
+                // החלפת מחלקות CSS של Quill לאטריביוטים סגנון ישירים
+                // כדי לוודא שהיישור עובד בכל מקום
+                let processedHtml = html
+                    .replace(/<p class="ql-align-center">/g, '<p style="text-align: center;">')
+                    .replace(/<p class="ql-align-right">/g, '<p style="text-align: right;">')
+                    .replace(/<p class="ql-align-left">/g, '<p style="text-align: left;">')
+                    .replace(/<p class="ql-align-justify">/g, '<p style="text-align: justify;">');
+                
+                // טיפול במקרים בהם יש מספר מחלקות
+                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-center([^"]*)"/g, 'class="$1$2" style="text-align: center;"');
+                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-center([^"]*)"/g, 'class="$1$2" style="text-align: center;"');
+                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-right([^"]*)"/g, 'class="$1$2" style="text-align: right;"');
+                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-left([^"]*)"/g, 'class="$1$2" style="text-align: left;"');
+                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-justify([^"]*)"/g, 'class="$1$2" style="text-align: justify;"');
+                
+                return processedHtml;
+            }
+            
             // לפני שליחת הטופס, שמור את התוכן HTML בשדה המוסתר
             form.addEventListener('submit', function(e) {
-                // שמירת התוכן HTML בשדה מוסתר
-                contentInput.value = quill.root.innerHTML;
+                // שמירת התוכן HTML בשדה מוסתר עם שמירה על מאפייני יישור
+                const htmlContent = quill.root.innerHTML;
+                
+                // וידוא שמאפייני היישור נשמרים כראוי
+                const processedHtml = preserveAlignment(htmlContent);
+                contentInput.value = processedHtml;
                 
                 // בדיקת תקינות הטופס
                 if (!form.checkValidity() || quill.getText().trim().length === 0) {
@@ -648,33 +749,6 @@
                     quill.setContents([]);
                     document.getElementById('year').value = currentHebrewYear;
                 }, 1000);
-            });
-            
-            // טיפול בטאבים של עורך התוכן
-            const editorTabs = document.querySelectorAll('.editor-tab');
-            const editorContainer = document.getElementById('editor-container');
-            const previewContainer = document.getElementById('preview-container');
-            const previewContent = document.getElementById('preview-content');
-            
-            editorTabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    // הסרת active מכל הטאבים
-                    editorTabs.forEach(t => t.classList.remove('active'));
-                    // הוספת active לטאב הנוכחי
-                    this.classList.add('active');
-                    
-                    // החלפת תצוגה בהתאם לטאב שנבחר
-                    const tabId = this.getAttribute('data-tab');
-                    if (tabId === 'editor') {
-                        editorContainer.style.display = 'block';
-                        previewContainer.style.display = 'none';
-                    } else if (tabId === 'preview') {
-                        // עדכון תצוגה מקדימה
-                        previewContent.innerHTML = quill.root.innerHTML;
-                        editorContainer.style.display = 'none';
-                        previewContainer.style.display = 'block';
-                    }
-                });
             });
         });
         

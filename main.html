@@ -606,100 +606,52 @@
                 document.getElementById('current-parasha-name').textContent = parashaName;
                 document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${parashaName}`;
                 
-                // כאן נשתמש בקישור המוגדר בתחילת הקובץ
-                const url = SHEET_URL;
+                // רשימת פרשות לחיפוש
+                let parashaList = [parashaName];
                 
+                // אם זו פרשה כפולה, פצל אותה ובצע שני חיפושים
+                if (parashaName.includes('-')) {
+                    const parts = parashaName.split('-');
+                    parashaList = [parts[0].trim(), parts[1].trim()];
+                    console.log(`פרשה כפולה זוהתה: ${parashaName}, מחפש את: ${parashaList.join(', ')}`);
+                }
+                
+                // טען את הנתונים מהגיליון
+                const url = SHEET_URL;
                 const response = await fetch(url);
                 const csvText = await response.text();
-                
-                // נפרסר את ה-CSV
                 const rows = parseCSV(csvText);
                 
-                // רשימת פרשות לחיפוש
-                let searchParashas = [];
+                // מערך שיכיל את כל התוצאות מכל הפרשות
+                let allResults = [];
                 
-                // אם זו פרשה כפולה, חפש גם את הפרשות הבודדות
-                if (parashaName.includes('-')) {
-                    // הוסף את הפרשה הכפולה עצמה
-                    searchParashas.push(parashaName);
+                // עבור כל פרשה ברשימה, בצע חיפוש נפרד
+                for (const currentParasha of parashaList) {
+                    console.log(`מחפש תוכן עבור פרשת ${currentParasha}`);
                     
-                    // הוסף וריאציות עם רווח במקום מקף
-                    searchParashas.push(parashaName.replace('-', ' '));
-                    
-                    // הוסף את הפרשות הבודדות
-                    const parts = parashaName.split('-');
-                    searchParashas.push(parts[0].trim());
-                    searchParashas.push(parts[1].trim());
-                    
-                    // טיפול בוואריאציות של בחוקותי/בחקתי
-                    if (parts[1].trim() === "בחוקותי") {
-                        searchParashas.push("בחקתי");
-                    } else if (parts[1].trim() === "בחקתי") {
-                        searchParashas.push("בחוקותי");
-                    }
-                    
-                    // טיפול בווריאציות נוספות
-                    if (parts[0].trim() === "ניצבים") {
-                        searchParashas.push("נצבים");
-                    }
-                    if (parts[0].trim() === "חקת") {
-                        searchParashas.push("חוקת");
-                    }
-                } else {
-                    // אם זו פרשה רגילה, חפש רק אותה
-                    searchParashas.push(parashaName);
-                    
-                    // הוסף וריאציות ידועות
-                    if (parashaName === "בחוקותי") {
-                        searchParashas.push("בחקתי");
-                    } else if (parashaName === "בחקתי") {
-                        searchParashas.push("בחוקותי");
-                    } else if (parashaName === "ניצבים") {
-                        searchParashas.push("נצבים");
-                    } else if (parashaName === "חקת") {
-                        searchParashas.push("חוקת");
-                    }
-                }
-                
-                console.log("מחפש פרשות:", searchParashas);
-                
-                // נסנן רק את הרשומות הזמינות עבור הפרשה הנוכחית או חלקיה
-                const parashaEntries = [];
-                
-                // עבור על כל השורות בגיליון
-                for (const row of rows) {
-                    // ודא שיש מספיק עמודות בשורה
-                    if (row.length <= 5) continue;
-                    
-                    const rowParasha = row[0].trim();
-                    const isAvailable = (
-                        row[5].trim().toLowerCase() === "כן" || 
-                        row[5].trim().toLowerCase() === "yes" || 
-                        row[5].trim() === "1"
+                    // סינון לפי הפרשה הנוכחית
+                    const entries = rows.filter(row => 
+                        row.length > 5 && 
+                        row[0].trim() === currentParasha &&
+                        (row[5].trim().toLowerCase() === "כן" || row[5].trim().toLowerCase() === "yes" || row[5].trim() === "1")
                     );
                     
-                    // אם השורה לא זמינה, דלג עליה
-                    if (!isAvailable) continue;
+                    console.log(`נמצאו ${entries.length} תוצאות עבור פרשת ${currentParasha}`);
                     
-                    // בדוק אם הפרשה בשורה מתאימה לאחת מהפרשות שאנחנו מחפשים
-                    for (const searchParasha of searchParashas) {
-                        if (rowParasha === searchParasha) {
-                            parashaEntries.push(row);
-                            break; // מספיק התאמה אחת
-                        }
-                    }
+                    // הוסף את התוצאות למערך הכולל
+                    allResults = [...allResults, ...entries];
                 }
                 
-                console.log(`נמצאו ${parashaEntries.length} רשומות זמינות לפרשת ${parashaName}:`, parashaEntries);
+                console.log(`סך הכל נמצאו ${allResults.length} רשומות לפרשת ${parashaName}`);
                 
-                // אם יש רשומות לפרשה זו, הצג אותן
-                if (parashaEntries.length > 0) {
-                    // הצג את הראשון כתוכן ראשי
-                    displayContent(parashaEntries[0]);
+                // אם יש רשומות, הצג אותן
+                if (allResults.length > 0) {
+                    // הצג את הראשונה כתוכן ראשי
+                    displayContent(allResults[0]);
                     
                     // הצג בוחר תוכן אם יש יותר מרשומה אחת
-                    if (parashaEntries.length > 1) {
-                        displayContentSelector(parashaEntries, 0); // האינדקס הראשון פעיל כברירת מחדל
+                    if (allResults.length > 1) {
+                        displayContentSelector(allResults, 0); // האינדקס הראשון פעיל כברירת מחדל
                     } else {
                         // אם יש רק רשומה אחת, וודא שבוחר התוכן מוסתר
                         const selectorContainer = document.getElementById('content-selector');
@@ -728,41 +680,16 @@
                 }
                 
                 // טעינת ארכיון פרשות קודמות (מפרשות שונות) - רק פריטים זמינים
-                const otherParashot = [];
-                
-                for (const row of rows) {
-                    // ודא שיש מספיק עמודות בשורה
-                    if (row.length <= 5) continue;
-                    
-                    const rowParasha = row[0].trim();
-                    const isAvailable = (
-                        row[5].trim().toLowerCase() === "כן" || 
-                        row[5].trim().toLowerCase() === "yes" || 
-                        row[5].trim() === "1"
-                    );
-                    
-                    // אם השורה לא זמינה, דלג עליה
-                    if (!isAvailable) continue;
-                    
-                    // בדוק שהפרשה אינה אחת מהפרשות שאנחנו כבר מציגים
-                    let isInCurrentParashas = false;
-                    for (const searchParasha of searchParashas) {
-                        if (rowParasha === searchParasha) {
-                            isInCurrentParashas = true;
-                            break;
-                        }
-                    }
-                    
-                    // אם זו לא פרשה שאנחנו כבר מציגים, הוסף לארכיון
-                    if (!isInCurrentParashas) {
-                        otherParashot.push(row);
-                    }
-                }
+                const otherParashot = rows.filter(row => 
+                    row.length > 5 && 
+                    !parashaList.includes(row[0].trim()) &&
+                    (row[5].trim().toLowerCase() === "כן" || row[5].trim().toLowerCase() === "yes" || row[5].trim() === "1")
+                );
                 
                 loadArchiveItems(otherParashot);
                 
             } catch (error) {
-                document.getElementById('content-area').innerHTML = `
+               document.getElementById('content-area').innerHTML = `
                     <div class="content-container">
                         <div class="content-header">
                             <h3 class="content-title">שגיאה בטעינת התוכן</h3>

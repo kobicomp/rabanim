@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>דברי תורה שבועיים - מבואה</title>
     <link rel="icon" href="data:,">
-    <!-- הוספת ספריית הלוח העברי -->
-    <script src="https://unpkg.com/@hebcal/core@4.3.2/dist/bundle.min.js"></script>
     <style>
         :root {
             --primary-color: #3f51b5;
@@ -459,16 +457,34 @@
             "חקת-בלק", "מטות-מסעי", "ניצבים-וילך"
         ];
         
+        // פונקציה עזר לפורמט תאריך
+        function formatDate(date) {
+            return date.toISOString().split('T')[0];
+        }
+
+        // פונקציה לקביעת תאריך השבת הקרובה
+        function getParashaWeek(date) {
+            const d = new Date(date);
+            const day = d.getDay();
+            const targetSaturday = new Date(d);
+            const daysToAdd = (day === 6) ? 7 : (6 - day);
+            targetSaturday.setDate(d.getDate() + daysToAdd);
+            return formatDate(targetSaturday);
+        }
+        
         // פונקציה להצגת התאריך העברי
-        function displayHebrewDate() {
+        async function displayHebrewDate() {
             try {
-                // השתמש בספרייה hebcal לקבלת התאריך העברי
-                const today = new Hebcal.HDate();
-                const formatter = new Hebcal.HebrewDateFormatter();
-                formatter.setHebrewFormat(true);
+                const today = new Date();
+                const dateUrl = `https://www.hebcal.com/converter?cfg=json&date=${formatDate(today)}&g2h=1&lg=he`;
+                const response = await fetch(dateUrl);
+                const data = await response.json();
                 
-                const hebrewDate = formatter.format(today);
-                document.getElementById('hebrew-date').textContent = hebrewDate;
+                if (data && data.hebrew) {
+                    document.getElementById('hebrew-date').textContent = data.hebrew;
+                } else {
+                    document.getElementById('hebrew-date').textContent = 'לא ניתן להציג את התאריך העברי';
+                }
             } catch (error) {
                 console.error('שגיאה בחישוב התאריך העברי:', error);
                 document.getElementById('hebrew-date').textContent = 'לא ניתן להציג את התאריך העברי';
@@ -476,48 +492,55 @@
         }
         
         // פונקציה לקביעת הפרשה הנוכחית לפי התאריך
-        function getCurrentParasha() {
+        async function getCurrentParasha() {
             try {
-                // קבל את התאריך הנוכחי
                 const today = new Date();
+                const parashaDate = getParashaWeek(today);
                 
-                // מצא את השבת הבאה (אם היום שבת, השתמש בתאריך הנוכחי)
-                const dayOfWeek = today.getDay(); // 0 = ראשון, 6 = שבת
-                const daysUntilNextShabbat = dayOfWeek === 6 ? 0 : 6 - dayOfWeek;
+                const parashaUrl = `https://www.hebcal.com/leyning?cfg=json&date=${parashaDate}`;
+                const response = await fetch(parashaUrl);
+                const data = await response.json();
                 
-                const nextShabbat = new Date(today);
-                nextShabbat.setDate(today.getDate() + daysUntilNextShabbat);
-                
-                // המר לתאריך עברי
-                const hDate = new Hebcal.HDate(nextShabbat);
-                
-                // קבל את פרשת השבוע
-                const sedra = Hebcal.HebrewCalendar.getSedra(hDate.getFullYear(), hDate.getMonth() + 1, hDate.getDate());
-                
-                // אם אין פרשה (למשל חג), נסה את השבת הבאה
-                if (!sedra || !sedra.parsha || sedra.parsha.length === 0) {
-                    const nextNextShabbat = new Date(nextShabbat);
-                    nextNextShabbat.setDate(nextShabbat.getDate() + 7);
-                    
-                    const nextHDate = new Hebcal.HDate(nextNextShabbat);
-                    const nextSedra = Hebcal.HebrewCalendar.getSedra(
-                        nextHDate.getFullYear(), 
-                        nextHDate.getMonth() + 1, 
-                        nextHDate.getDate()
-                    );
-                    
-                    if (nextSedra && nextSedra.parsha && nextSedra.parsha.length > 0) {
-                        // המר לעברית
-                        const parshaNames = nextSedra.parsha.map(p => parashaTranslation[p] || p);
-                        return parshaNames.join('-');
+                if (data?.items?.[0]?.name) {
+                    // אם יש פרשה, החזר את השם העברי
+                    if (data.items[0].name.he) {
+                        return data.items[0].name.he;
                     }
                     
-                    return "בראשית"; // ברירת מחדל אם אין פרשה גם בשבת הבאה
+                    // אם אין שם עברי, נסה להמיר מאנגלית
+                    const englishName = data.items[0].name;
+                    if (parashaTranslation[englishName]) {
+                        return parashaTranslation[englishName];
+                    }
+                    
+                    // אם לא הצלחנו להמיר, החזר את השם באנגלית
+                    return englishName;
                 }
                 
-                // המר לעברית
-                const parshaNames = sedra.parsha.map(p => parashaTranslation[p] || p);
-                return parshaNames.join('-');
+                // אם אין פרשה (יום חג למשל), נסה את השבת הבאה
+                const nextWeek = new Date(today);
+                nextWeek.setDate(today.getDate() + 7);
+                const nextParashaDate = getParashaWeek(nextWeek);
+                
+                const nextParashaUrl = `https://www.hebcal.com/leyning?cfg=json&date=${nextParashaDate}`;
+                const nextResponse = await fetch(nextParashaUrl);
+                const nextData = await nextResponse.json();
+                
+                if (nextData?.items?.[0]?.name) {
+                    if (nextData.items[0].name.he) {
+                        return nextData.items[0].name.he;
+                    }
+                    
+                    const nextEnglishName = nextData.items[0].name;
+                    if (parashaTranslation[nextEnglishName]) {
+                        return parashaTranslation[nextEnglishName];
+                    }
+                    
+                    return nextEnglishName;
+                }
+                
+                // אם עדיין לא הצלחנו, החזר ברירת מחדל
+                return "בראשית";
             } catch (error) {
                 console.error('שגיאה בחישוב פרשת השבוע:', error);
                 return "בראשית"; // ברירת מחדל במקרה של שגיאה
@@ -525,7 +548,7 @@
         }
         
         // פונקציה לטעינת בחירת הפרשות
-        function loadParashotOptions() {
+        async function loadParashotOptions() {
             const selectElement = document.getElementById('parasha-select');
             
             // ניקוי אפשרויות קיימות פרט לאפשרות הראשונה
@@ -533,22 +556,33 @@
                 selectElement.remove(1);
             }
             
-            // קבל את הפרשה הנוכחית
-            const currentParasha = getCurrentParasha();
-            
-            // מילוי אפשרויות הבחירה
-            parashot.forEach(parasha => {
-                const option = document.createElement('option');
-                option.value = parasha;
-                option.textContent = parasha;
+            try {
+                // קבל את הפרשה הנוכחית
+                const currentParasha = await getCurrentParasha();
                 
-                // סמן את הפרשה הנוכחית כנבחרת
-                if (parasha === currentParasha) {
-                    option.selected = true;
-                }
+                // מילוי אפשרויות הבחירה
+                parashot.forEach(parasha => {
+                    const option = document.createElement('option');
+                    option.value = parasha;
+                    option.textContent = parasha;
+                    
+                    // סמן את הפרשה הנוכחית כנבחרת
+                    if (parasha === currentParasha) {
+                        option.selected = true;
+                    }
+                    
+                    selectElement.appendChild(option);
+                });
                 
-                selectElement.appendChild(option);
-            });
+                // עדכון שם הפרשה בכותרת
+                document.getElementById('current-parasha-name').textContent = currentParasha;
+                document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${currentParasha}`;
+                
+                return currentParasha;
+            } catch (error) {
+                console.error('שגיאה בטעינת הפרשות:', error);
+                return "בראשית"; // ברירת מחדל
+            }
         }
         
         // פונקציה לטעינת התוכן מגוגל שיטס
@@ -556,7 +590,7 @@
             try {
                 // קבל את הפרשה הנוכחית אם לא נבחרה פרשה ספציפית
                 if (!parashaName) {
-                    parashaName = getCurrentParasha();
+                    parashaName = await getCurrentParasha();
                 }
                 
                 // עדכון שם הפרשה בכותרת
@@ -684,6 +718,7 @@
         function parseCSV(text) {
             const rows = [];
             const lines = text.split('\n');
+            
             console.log("מספר שורות בקובץ CSV:", lines.length);
             
             // נדלג על שורת הכותרות
@@ -791,15 +826,23 @@
         }
         
         // אתחול הדף כשהוא נטען
-        window.addEventListener('DOMContentLoaded', () => {
-            // הצג תאריך עברי
-            displayHebrewDate();
-            
-            // טען את רשימת הפרשות עם הפרשה הנוכחית מסומנת
-            loadParashotOptions();
-            
-            // טען את התוכן של הפרשה הנוכחית
-            loadParashaContent();
+        window.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // הצג תאריך עברי
+                await displayHebrewDate();
+                
+                // טען את רשימת הפרשות עם הפרשה הנוכחית מסומנת
+                const currentParasha = await loadParashotOptions();
+                
+                // טען את התוכן של הפרשה הנוכחית
+                await loadParashaContent(currentParasha);
+            } catch (error) {
+                console.error('שגיאה באתחול הדף:', error);
+                // טען גרסה פשוטה במקרה של שגיאה
+                document.querySelector('.page-title').textContent = 'דבר תורה לפרשת השבוע';
+                document.getElementById('current-parasha-name').textContent = 'בראשית';
+                loadParashaContent('בראשית');
+            }
         });
     </script>
 </body>

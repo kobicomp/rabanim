@@ -17,6 +17,11 @@
         }
         
         /* ערכות צבעים לקטגוריות שונות */
+        body[data-active-category="divrei-torah"] {
+            --primary-color: #3f51b5;  /* כחול כהה - ברירת מחדל */
+            --accent-color: #ff9800;
+        }
+        
         body[data-active-category="aktualya"] {
             --primary-color: #E91E63;  /* ורוד */
             --accent-color: #FF5722;
@@ -332,6 +337,7 @@
         .archive-item p {
             font-size: 0.9rem;
             color: #666;
+            margin-bottom: 0.5rem;
         }
         
         .archive-item a {
@@ -385,6 +391,7 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="#" class="active" data-category="all">הכל</a></li>
+                    <li><a href="#" data-category="divrei-torah">דבר תורה</a></li>
                     <li><a href="#" data-category="aktualya">אקטואליה</a></li>
                     <li><a href="#" data-category="values">ערכים</a></li>
                     <li><a href="#" data-category="language">שפה</a></li>
@@ -431,6 +438,8 @@
         
         // משתנה גלובלי לשמירת הקטגוריה הפעילה
         let activeCategory = 'all';
+        // משתנה גלובלי לשמירת הפרשה הפעילה
+        let activeParasha = '';
         
         // פונקציה לנרמול מקפים (ממיר מקפים מיוחדים למקף רגיל)
         function normalizeHyphens(text) {
@@ -549,6 +558,7 @@
         
         // מיפוי שמות קטגוריות לשמות תצוגה בעברית
         const categoryLabels = {
+            'divrei-torah': 'דבר תורה',
             'aktualya': 'אקטואליה',
             'values': 'ערכים',
             'language': 'שפה',
@@ -557,6 +567,19 @@
             'parasha': 'אתגר הפרשה',
             'creativity': 'יצירה',
             'mission': 'שליחות'
+        };
+        
+        // מיפוי שמות תצוגה בעברית לקטגוריות באנגלית
+        const categoryMapping = {
+            'דבר תורה': 'divrei-torah',
+            'אקטואליה': 'aktualya',
+            'ערכים': 'values',
+            'שפה': 'language',
+            'פניני חוכמה': 'wisdom',
+            'העצמה וכלים לחיים': 'empowerment',
+            'אתגר הפרשה': 'parasha',
+            'יצירה': 'creativity',
+            'שליחות': 'mission'
         };
         
         // פונקציה לקביעת הפרשה הנוכחית לפי התאריך
@@ -630,6 +653,7 @@
             try {
                 // קבל את הפרשה הנוכחית
                 const currentParasha = await getCurrentParasha();
+                activeParasha = currentParasha; // שמור את הפרשה הנוכחית
                 
                 // רשימת פרשות קבועה (ללא ניקוד)
                 const parashot = [
@@ -669,7 +693,7 @@
             }
         }
         
-        // פונקציה לטעינת התוכן מגוגל שיטס - מעודכנת לטיפול בקטגוריות
+      // פונקציה לטעינת התוכן מגוגל שיטס - מעודכנת לטיפול בקטגוריות
         async function loadParashaContent(parashaName = null, category = null) {
             try {
                 // אם נבחרה קטגוריה חדשה, עדכן את הקטגוריה הפעילה
@@ -684,26 +708,27 @@
                     
                     // עדכן את ערכת הצבעים באמצעות מאפיין data
                     document.body.setAttribute('data-active-category', activeCategory === 'all' ? '' : activeCategory);
-                    
-                    // עדכן את הכותרת אם זו לא קטגורית 'הכל'
-                    if (activeCategory !== 'all') {
-                        document.querySelector('.page-title').textContent = categoryLabels[activeCategory];
-                    }
                 }
                 
                 // קבל את הפרשה הנוכחית אם לא נבחרה פרשה ספציפית
                 if (!parashaName) {
-                    parashaName = await getCurrentParasha();
+                    parashaName = activeParasha || await getCurrentParasha();
+                } else {
+                    activeParasha = parashaName; // עדכון הפרשה הפעילה
                 }
                 
-              
-           // נרמל מקפים בשם הפרשה
+                // נרמל מקפים בשם הפרשה
                 parashaName = normalizeHyphens(parashaName);
                 
-                // עדכון שם הפרשה בכותרת אם הקטגוריה היא 'הכל'
+                // עדכון שם הפרשה בכותרת
+                document.getElementById('current-parasha-name').textContent = parashaName;
+                
+                // עדכון כותרת העמוד לפי הקטגוריה הנבחרת
                 if (activeCategory === 'all') {
-                    document.getElementById('current-parasha-name').textContent = parashaName;
                     document.querySelector('.page-title').textContent = `דבר תורה לפרשת ${parashaName}`;
+                } else {
+                    const categoryLabel = categoryLabels[activeCategory] || activeCategory;
+                    document.querySelector('.page-title').textContent = `${categoryLabel} - פרשת ${parashaName}`;
                 }
                 
                 // טען את הנתונים מהגיליון
@@ -712,13 +737,7 @@
                 const csvText = await response.text();
                 const rows = parseCSV(csvText);
                 
-                // הדפס את שמות הפרשות בגיליון
-                console.log("שמות הפרשות בגיליון:");
-                rows.forEach(row => {
-                    if (row.length > 0) {
-                        console.log(`פרשה: "${row[0]}"`);
-                    }
-                });
+                console.log("טעינת נתונים מהגיליון, פרשה:", parashaName, "קטגוריה:", activeCategory);
                 
                 // רשימת פרשות לחיפוש - בהתחלה רק הפרשה עצמה
                 let parashaList = [parashaName];
@@ -728,14 +747,14 @@
                     const parts = parashaName.split('-');
                     
                     // הוסף את הפרשות הבודדות
-                    parashaList = [parts[0].trim(), parts[1].trim()];
+                    parashaList = [...parashaList, parts[0].trim(), parts[1].trim()];
                     console.log(`פרשה כפולה זוהתה: ${parashaName}, מחפש את: ${parashaList.join(', ')}`);
                 }
                 
                 // מערך שיכיל את כל התוצאות
                 let allResults = [];
                 
-                // בצע חיפוש נפרד לכל פרשה
+                // בצע חיפוש לכל פרשה
                 for (const searchParasha of parashaList) {
                     console.log(`מחפש תוכן עבור פרשת ${searchParasha}`);
                     
@@ -750,19 +769,28 @@
                             row[5]?.trim() === "1"
                         );
                         
+                        if (!isAvailable) return false;
+                        
                         // נרמל מקפים בשם הפרשה מהשורה
                         const normalizedRowParasha = normalizeHyphens(row[0]?.trim() || '');
-                        
-                        // קבל את הקטגוריה מהשורה (עמודה H - אינדקס 7)
-                        const rowCategory = row[7]?.trim().toLowerCase() || '';
                         
                         // בדוק התאמה לפרשה הנוכחית
                         const matchesParasha = normalizedRowParasha === searchParasha;
                         
-                        // בדוק התאמה לקטגוריה, אם 'הכל' נבחר אז כל הקטגוריות מתאימות
-                        const matchesCategory = activeCategory === 'all' || rowCategory === activeCategory;
+                        if (!matchesParasha) return false;
                         
-                        return matchesParasha && isAvailable && matchesCategory;
+                        // קבל את הקטגוריה מהשורה (עמודה H - אינדקס 7)
+                        const rowCategory = row[7]?.trim() || '';
+                        
+                        // המר את הקטגוריה העברית למזהה באנגלית אם צריך
+                        const categoryKey = categoryMapping[rowCategory] || rowCategory.toLowerCase();
+                        
+                        // בדוק התאמה לקטגוריה
+                        if (activeCategory === 'all') {
+                            return true; // כל הקטגוריות מתאימות
+                        } else {
+                            return categoryKey === activeCategory;
+                        }
                     });
                     
                     console.log(`נמצאו ${results.length} תוצאות עבור פרשת ${searchParasha} בקטגוריה ${activeCategory}`);
@@ -792,7 +820,7 @@
                     // אם אין רשומות, הצג הודעה מתאימה
                     let message = '';
                     if (activeCategory !== 'all') {
-                        message = `אין כרגע דבר תורה בקטגוריית ${categoryLabels[activeCategory]} לפרשת ${parashaName}.`;
+                        message = `אין כרגע דבר תורה בקטגוריית "${categoryLabels[activeCategory]}" לפרשת ${parashaName}.`;
                     } else {
                         message = `אין כרגע דבר תורה זמין לפרשת ${parashaName}.`;
                     }
@@ -826,19 +854,28 @@
                         row[5]?.trim() === "1"
                     );
                     
+                    if (!isAvailable) return false;
+                    
                     // נרמל מקפים בשם הפרשה מהשורה
                     const normalizedRowParasha = normalizeHyphens(row[0]?.trim() || '');
-                    
-                    // קבל את הקטגוריה מהשורה (עמודה H - אינדקס 7)
-                    const rowCategory = row[7]?.trim().toLowerCase() || '';
                     
                     // בדוק שהפרשה לא אחת מהפרשות שאנחנו כבר מציגים
                     const differentParasha = !parashaList.includes(normalizedRowParasha);
                     
-                    // בדוק התאמה לקטגוריה, אם 'הכל' נבחר אז כל הקטגוריות מתאימות
-                    const matchesCategory = activeCategory === 'all' || rowCategory === activeCategory;
+                    if (!differentParasha) return false;
                     
-                    return differentParasha && isAvailable && matchesCategory;
+                    // קבל את הקטגוריה מהשורה (עמודה H - אינדקס 7)
+                    const rowCategory = row[7]?.trim() || '';
+                    
+                    // המר את הקטגוריה העברית למזהה באנגלית אם צריך
+                    const categoryKey = categoryMapping[rowCategory] || rowCategory.toLowerCase();
+                    
+                    // בדוק התאמה לקטגוריה
+                    if (activeCategory === 'all') {
+                        return true; // כל הקטגוריות מתאימות
+                    } else {
+                        return categoryKey === activeCategory;
+                    }
                 });
                 
                 loadArchiveItems(otherParashot);
@@ -877,8 +914,8 @@
                 
                 // הוסף תווית קטגוריה אם קיימת
                 if (category) {
-                    const categoryKey = category.toLowerCase();
-                    const displayCategory = categoryLabels[categoryKey] || category;
+                    const categoryKey = categoryMapping[category] || category.toLowerCase();
+                    const displayCategory = category;
                     cardContent += `<span class="category-label">${displayCategory}</span>`;
                 }
                 
@@ -937,7 +974,6 @@
                 rows.push(row);
             }
             
-            console.log("שורות לאחר פרסור:", rows);
             return rows;
         }
         
@@ -949,9 +985,8 @@
             // הכנת תצוגת הקטגוריה
             let categoryHtml = '';
             if (category) {
-                const categoryKey = category.toLowerCase();
-                const displayCategory = categoryLabels[categoryKey] || category;
-                categoryHtml = `<span class="category-label">${displayCategory}</span>`;
+                const categoryKey = categoryMapping[category] || category.toLowerCase();
+                categoryHtml = `<span class="category-label">${category}</span>`;
             }
             
             const contentHtml = `
@@ -1009,8 +1044,7 @@
                 // הכנת תצוגת הקטגוריה
                 let categoryHtml = '';
                 if (category) {
-                    const categoryKey = category.toLowerCase();
-                    const displayCategory = categoryLabels[categoryKey] || category;
+                    const displayCategory = category;
                     categoryHtml = `<span class="category-label">${displayCategory}</span>`;
                 }
                 
@@ -1020,7 +1054,7 @@
                     <h4>${title}</h4>
                     <p>פרשת ${parasha} ${year ? `(${year})` : ''}</p>
                     <p>${categoryHtml} מאת: ${author}</p>
-                    <a href="#" onclick="loadParashaContent('${parasha}'); return false;">לקריאה</a>
+                    <a href="#" onclick="selectParashaAndCategory('${parasha}', '${categoryMapping[category] || category.toLowerCase()}'); return false;">לקריאה</a>
                 `;
                 
                 archiveContainer.appendChild(archiveItem);
@@ -1039,6 +1073,21 @@
             }
         }
         
+        // פונקציה לבחירת פרשה וקטגוריה בבת אחת
+        function selectParashaAndCategory(parasha, category) {
+            // עדכן את הפרשה הנבחרת בתיבת הבחירה
+            const selectElement = document.getElementById('parasha-select');
+            for (let i = 0; i < selectElement.options.length; i++) {
+                if (selectElement.options[i].value === parasha) {
+                    selectElement.selectedIndex = i;
+                    break;
+                }
+            }
+            
+            // טען את התוכן לפי הפרשה והקטגוריה שנבחרו
+            loadParashaContent(parasha, category);
+        }
+        
         // הוסף ניהול אירועי קטגוריה
         function setupCategoryHandlers() {
             document.querySelectorAll('.nav-links a').forEach(link => {
@@ -1047,7 +1096,7 @@
                     const category = this.getAttribute('data-category');
                     
                     // טען תוכן חדש לפי הקטגוריה הנבחרת
-                    loadParashaContent(null, category);
+                    loadParashaContent(activeParasha, category);
                 });
             });
         }

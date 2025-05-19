@@ -299,7 +299,217 @@
             background-color: rgba(255, 255, 255, 0.2);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
+/* סגנונות לתוכן עשיר מהטופס */
+.content-body .rich-text-content,
+.content-body div.site-content-data { /* זיהוי מיוחד לתוכן שלנו */
+    max-width: 100%;
+}
 
+/* יישורי טקסט - עדכונים חשובים */
+.content-body [align="center"],
+.content-body [style*="text-align: center"],
+.content-body .ql-align-center {
+    text-align: center !important;
+    display: block !important; 
+    margin-right: auto !important;
+    margin-left: auto !important;
+}
+
+.content-body [align="right"],
+.content-body [style*="text-align: right"],
+.content-body .ql-align-right {
+    text-align: right !important;
+    display: block !important;
+}
+
+.content-body [align="left"],
+.content-body [style*="text-align: left"],
+.content-body .ql-align-left {
+    text-align: left !important;
+    display: block !important;
+}
+
+.content-body [align="justify"],
+.content-body [style*="text-align: justify"],
+.content-body .ql-align-justify {
+    text-align: justify !important;
+    display: block !important;
+}
+
+/* ביטול דריסת צבעים */
+.content-body span[style*="color:"] {
+    color: inherit; /* אפשר שצבעים יעבדו */
+}
+.content-body span[style*="background-color:"] {
+    background-color: inherit; /* אפשר שצבעי רקע יעבדו */
+}
+
+/* טיפול מיוחד בצבעים ספציפיים - מודגש הוספת !important */
+.content-body .ql-color-red, 
+.content-body span[style*="color: red"] {
+    color: red !important;
+}
+.content-body .ql-color-blue, 
+.content-body span[style*="color: blue"] {
+    color: blue !important;
+}
+.content-body .ql-color-green, 
+.content-body span[style*="color: green"] {
+    color: green !important;
+}
+.content-body .ql-color-purple, 
+.content-body span[style*="color: purple"] {
+    color: purple !important;
+}
+.content-body .ql-color-orange, 
+.content-body span[style*="color: orange"] {
+    color: orange !important;
+}
+.content-body .ql-color-black, 
+.content-body span[style*="color: black"] {
+    color: black !important;
+}
+
+/* צבעי רקע */
+.content-body .ql-background-yellow, 
+.content-body span[style*="background-color: yellow"] {
+    background-color: yellow !important;
+}
+.content-body .ql-background-lightblue, 
+.content-body span[style*="background-color: lightblue"] {
+    background-color: lightblue !important;
+}
+.content-body .ql-background-lightgreen, 
+.content-body span[style*="background-color: lightgreen"] {
+    background-color: lightgreen !important;
+}
+.content-body .ql-background-pink, 
+.content-body span[style*="background-color: pink"] {
+    background-color: pink !important;
+}
+
+/* כותרות עם !important לדריסת סגנון אתר מחמיר */
+.content-body h1 {
+    font-size: 2em !important;
+    margin-top: 1em !important;
+    margin-bottom: 0.5em !important;
+    font-weight: bold !important;
+}
+.content-body h2 {
+    font-size: 1.75em !important;
+    margin-top: 1em !important;
+    margin-bottom: 0.5em !important;
+    font-weight: bold !important;
+}
+.content-body h3 {
+    font-size: 1.5em !important;
+    margin-top: 1em !important;
+    margin-bottom: 0.5em !important;
+    font-weight: bold !important;
+}
+.content-body h4 {
+    font-size: 1.25em !important;
+    margin-top: 1em !important;
+    margin-bottom: 0.5em !important;
+    font-weight: bold !important;
+}
+.content-body h5 {
+    font-size: 1.1em !important;
+    margin-top: 1em !important;
+    margin-bottom: 0.5em !important;
+    font-weight: bold !important;
+}
+.content-body h6 {
+    font-size: 1em !important;
+    margin-top: 1em !important;
+    margin-bottom: 0.5em !important;
+    font-weight: bold !important;
+}
+
+/* עיצובי טקסט */
+.content-body strong, 
+.content-body b {
+    font-weight: bold !important;
+}
+.content-body em, 
+.content-body i {
+    font-style: italic !important;
+}
+.content-body u {
+    text-decoration: underline !important;
+}
+.content-body s, 
+.content-body strike {
+    text-decoration: line-through !important;
+}
+
+/* רשימות */
+.content-body ul {
+    list-style-type: disc !important;
+    margin: 1em 1.5em !important;
+    padding-right: 1em !important;
+}
+.content-body ol {
+    list-style-type: decimal !important;
+    margin: 1em 1.5em !important;
+    padding-right: 1em !important;
+}
+.content-body li {
+    margin-bottom: 0.5em !important;
+    display: list-item !important;
+}
+
+/* ציטוטים */
+.content-body blockquote {
+    border-right: 3px solid #ccc !important;
+    margin-right: 0 !important;
+    padding: 0.5em 1em !important;
+    background-color: #f9f9f9 !important;
+    margin-bottom: 1em !important;
+}
+
+/* קישורים */
+.content-body a {
+    color: #4062bb !important;
+    text-decoration: underline !important;
+}
+.content-body a:hover {
+    color: #5a7ed2 !important;
+}
+
+/* תמונות */
+.content-body img {
+    max-width: 100% !important;
+    height: auto !important;
+    margin: 1em 0 !important;
+}
+
+/* הזחות */
+.content-body .ql-indent-1 {
+    padding-right: 3em !important;
+}
+.content-body .ql-indent-2 {
+    padding-right: 6em !important;
+}
+
+/* קוד */
+.content-body pre, 
+.content-body code {
+    background-color: #f0f0f0 !important;
+    padding: 0.2em 0.4em !important;
+    border-radius: 3px !important;
+    font-family: monospace !important;
+}
+.content-body pre {
+    padding: 1em !important;
+    overflow-x: auto !important;
+    margin-bottom: 1em !important;
+}
+
+/* רווחים בין פסקאות */
+.content-body p {
+    margin-bottom: 1em !important;
+}
         main {
             padding: 1.5rem 0;
             margin-top: 1rem;

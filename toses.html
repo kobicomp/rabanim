@@ -712,9 +712,10 @@
             }
             
           // פונקציה לעיבוד התוכן לשליחה לשרת עם הפתרון שעובד
-            function enhanceContentForSubmission(html) {
-                // בניית קוד התחלתי עם סגנונות מקומיים לאכיפת צבע
-                let processedHtml = `<div class="rich-text-content color-forced">
+          // פונקציה לעיבוד התוכן לשליחה לשרת
+function enhanceContentForSubmission(html) {
+    // בניית קוד התחלתי עם סגנונות מקומיים לאכיפת צבע
+    let processedHtml = `<div class="rich-text-content color-forced">
 <style>
 /* סגנונות מקומיים לאכיפת צבעים */
 .color-blue { color: #0066cc !important; }
@@ -747,121 +748,14 @@ p.ql-align-justify, div.ql-align-justify, h1.ql-align-justify, h2.ql-align-justi
 }
 </style>`;
 
-                // עיבוד התוכן עצמו - טיפול בתגי יישור
-                let bodyHtml = html
-                    // יישור פסקאות
-                    .replace(/<p class="([^"]*)ql-align-center([^"]*)">/g, '<p class="$1ql-align-center$2" style="text-align: center !important;" align="center">')
-                    .replace(/<p class="([^"]*)ql-align-right([^"]*)">/g, '<p class="$1ql-align-right$2" style="text-align: right !important;" align="right">')
-                    .replace(/<p class="([^"]*)ql-align-left([^"]*)">/g, '<p class="$1ql-align-left$2" style="text-align: left !important;" align="left">')
-                    .replace(/<p class="([^"]*)ql-align-justify([^"]*)">/g, '<p class="$1ql-align-justify$2" style="text-align: justify !important;" align="justify">')
-                    
-                    // יישור כותרות
-                    .replace(/<(h[1-6]) class="([^"]*)ql-align-center([^"]*)">/g, '<$1 class="$2ql-align-center$3" style="text-align: center !important;" align="center">')
-                    .replace(/<(h[1-6]) class="([^"]*)ql-align-right([^"]*)">/g, '<$1 class="$2ql-align-right$3" style="text-align: right !important;" align="right">')
-                    .replace(/<(h[1-6]) class="([^"]*)ql-align-left([^"]*)">/g, '<$1 class="$2ql-align-left$3" style="text-align: left !important;" align="left">')
-                    .replace(/<(h[1-6]) class="([^"]*)ql-align-justify([^"]*)">/g, '<$1 class="$2ql-align-justify$3" style="text-align: justify !important;" align="justify">');
+    // הוספת התוכן
+    processedHtml += html;
+    
+    // סגירת הdiv
+    processedHtml += '</div>';
 
-                // טיפול בצבעים - הוספת מחלקות צבע ייעודיות
-                // צבע כחול
-                bodyHtml = bodyHtml
-                    .replace(/<span style="color: rgb\(0, 102, 204\)([^>]*)>/g, '<span class="color-blue" style="color: #0066cc !important;"$1>')
-                    .replace(/<span style="color: #0066cc([^>]*)>/g, '<span class="color-blue" style="color: #0066cc !important;"$1>')
-                    .replace(/<span style="color: blue([^>]*)>/g, '<span class="color-blue" style="color: #0066cc !important;"$1>')
-                    
-                    // צבע אדום
-                    .replace(/<span style="color: rgb\(255, 0, 0\)([^>]*)>/g, '<span class="color-red" style="color: #ff0000 !important;"$1>')
-                    .replace(/<span style="color: #ff0000([^>]*)>/g, '<span class="color-red" style="color: #ff0000 !important;"$1>')
-                    .replace(/<span style="color: red([^>]*)>/g, '<span class="color-red" style="color: #ff0000 !important;"$1>')
-                    
-                    // צבע ירוק
-                    .replace(/<span style="color: rgb\(0, 128, 0\)([^>]*)>/g, '<span class="color-green" style="color: #008000 !important;"$1>')
-                    .replace(/<span style="color: #008000([^>]*)>/g, '<span class="color-green" style="color: #008000 !important;"$1>')
-                    .replace(/<span style="color: green([^>]*)>/g, '<span class="color-green" style="color: #008000 !important;"$1>')
-                    
-                    // צבע סגול
-                    .replace(/<span style="color: rgb\(128, 0, 128\)([^>]*)>/g, '<span class="color-purple" style="color: #800080 !important;"$1>')
-                    .replace(/<span style="color: #800080([^>]*)>/g, '<span class="color-purple" style="color: #800080 !important;"$1>')
-                    .replace(/<span style="color: purple([^>]*)>/g, '<span class="color-purple" style="color: #800080 !important;"$1>')
-                    
-                    // צבע כתום
-                    .replace(/<span style="color: rgb\(255, 140, 0\)([^>]*)>/g, '<span class="color-orange" style="color: #ff8c00 !important;"$1>')
-                    .replace(/<span style="color: #ff8c00([^>]*)>/g, '<span class="color-orange" style="color: #ff8c00 !important;"$1>')
-                    .replace(/<span style="color: orange([^>]*)>/g, '<span class="color-orange" style="color: #ff8c00 !important;"$1>')
-                    
-                    // צבע שחור
-                    .replace(/<span style="color: rgb\(0, 0, 0\)([^>]*)>/g, '<span class="color-black" style="color: #000000 !important;"$1>')
-                    .replace(/<span style="color: #000000([^>]*)>/g, '<span class="color-black" style="color: #000000 !important;"$1>')
-                    .replace(/<span style="color: black([^>]*)>/g, '<span class="color-black" style="color: #000000 !important;"$1>')
-                    
-                    // רקע צהוב
-                    .replace(/<span style="background-color: rgb\(255, 255, 0\)([^>]*)>/g, '<span class="bg-yellow" style="background-color: #ffff00 !important;"$1>')
-                    .replace(/<span style="background-color: #ffff00([^>]*)>/g, '<span class="bg-yellow" style="background-color: #ffff00 !important;"$1>')
-                    .replace(/<span style="background-color: yellow([^>]*)>/g, '<span class="bg-yellow" style="background-color: #ffff00 !important;"$1>')
-                    
-                    // רקע תכלת
-                    .replace(/<span style="background-color: rgb\(173, 216, 230\)([^>]*)>/g, '<span class="bg-lightblue" style="background-color: #add8e6 !important;"$1>')
-                    .replace(/<span style="background-color: #add8e6([^>]*)>/g, '<span class="bg-lightblue" style="background-color: #add8e6 !important;"$1>')
-                    .replace(/<span style="background-color: lightblue([^>]*)>/g, '<span class="bg-lightblue" style="background-color: #add8e6 !important;"$1>')
-                    
-                    // רקע ירוק בהיר
-                    .replace(/<span style="background-color: rgb\(144, 238, 144\)([^>]*)>/g, '<span class="bg-lightgreen" style="background-color: #90ee90 !important;"$1>')
-                    .replace(/<span style="background-color: #90ee90([^>]*)>/g, '<span class="bg-lightgreen" style="background-color: #90ee90 !important;"$1>')
-                    .replace(/<span style="background-color: lightgreen([^>]*)>/g, '<span class="bg-lightgreen" style="background-color: #90ee90 !important;"$1>')
-                    
-                    // רקע ורוד
-                    .replace(/<span style="background-color: rgb\(255, 192, 203\)([^>]*)>/g, '<span class="bg-pink" style="background-color: #ffc0cb !important;"$1>')
-                    .replace(/<span style="background-color: #ffc0cb([^>]*)>/g, '<span class="bg-pink" style="background-color: #ffc0cb !important;"$1>')
-                    .replace(/<span style="background-color: pink([^>]*)>/g, '<span class="bg-pink" style="background-color: #ffc0cb !important;"$1>');
-
-                // סיום התוכן - הוספת סגירת ה-div
-                processedHtml += bodyHtml;
-                processedHtml += '</div>';
-
-                return processedHtml;
-            }
-            
-            // לפני שליחת הטופס, שמור את התוכן HTML בשדה המוסתר
-            form.addEventListener('submit', function(e) {
-                // קבל את התוכן מהעורך
-                const htmlContent = quill.root.innerHTML;
-                
-                // עיבוד התוכן לפורמט תואם ל-Google Sheets עם פתרון הצבעים
-                const processedHtml = enhanceContentForSubmission(htmlContent);
-                contentInput.value = processedHtml;
-                
-                // בדיקת תקינות הטופס
-                if (!form.checkValidity() || quill.getText().trim().length === 0) {
-                    e.preventDefault();
-                    
-                    // הצג הודעת שגיאה
-                    statusPopup.classList.remove('success');
-                    statusPopup.classList.add('error');
-                    statusPopup.querySelector('.status-title').textContent = 'שגיאה';
-                    statusPopup.querySelector('.status-message').textContent = 'אנא מלא את כל השדות המסומנים בכוכבית';
-                    statusOverlay.classList.add('active');
-                    
-                    return;
-                }
-                
-                // אם הטופס תקין
-                // הטופס נשלח ל-iframe מוסתר
-                setTimeout(function() {
-                    // הצגת חלון אישור
-                    statusPopup.classList.remove('error');
-                    statusPopup.classList.add('success');
-                    statusPopup.querySelector('.status-title').textContent = 'נשלח בהצלחה';
-                    statusPopup.querySelector('.status-message').textContent = 'דבר התורה נשלח בהצלחה ויוסף למאגר לאחר אישור.';
-                    statusOverlay.classList.add('active');
-                    
-                    // איפוס הטופס
-                    form.reset();
-                    quill.setContents([]);
-                    document.getElementById('year').value = currentHebrewYear;
-                }, 1000);
-            });
-        });
-        
-        // פונקציה לסגירת חלון האישור
+    return processedHtml;
+}
         function closeStatusPopup() {
             document.getElementById('statusOverlay').classList.remove('active');
         }

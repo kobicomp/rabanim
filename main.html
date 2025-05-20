@@ -269,7 +269,7 @@
             scrollbar-width: none; /* Firefox */
         }
 
-        nav::-webkit-scrollbar {
+        nav::-webkit-scrollbar { 
             display: none; /* Chrome, Safari, Edge */
         }
 
@@ -299,217 +299,7 @@
             background-color: rgba(255, 255, 255, 0.2);
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-/* סגנונות לתוכן עשיר מהטופס */
-.content-body .rich-text-content,
-.content-body div.site-content-data { /* זיהוי מיוחד לתוכן שלנו */
-    max-width: 100%;
-}
 
-/* יישורי טקסט - עדכונים חשובים */
-.content-body [align="center"],
-.content-body [style*="text-align: center"],
-.content-body .ql-align-center {
-    text-align: center !important;
-    display: block !important;
-    margin-right: auto !important;
-    margin-left: auto !important;
-}
-
-.content-body [align="right"],
-.content-body [style*="text-align: right"],
-.content-body .ql-align-right {
-    text-align: right !important;
-    display: block !important;
-}
-
-.content-body [align="left"],
-.content-body [style*="text-align: left"],
-.content-body .ql-align-left {
-    text-align: left !important;
-    display: block !important;
-}
-
-.content-body [align="justify"],
-.content-body [style*="text-align: justify"],
-.content-body .ql-align-justify {
-    text-align: justify !important;
-    display: block !important;
-}
-
-/* ביטול דריסת צבעים */
-.content-body span[style*="color:"] {
-    color: inherit; /* אפשר שצבעים יעבדו */
-}
-.content-body span[style*="background-color:"] {
-    background-color: inherit; /* אפשר שצבעי רקע יעבדו */
-}
-
-/* טיפול מיוחד בצבעים ספציפיים - מודגש הוספת !important */
-.content-body .ql-color-red,
-.content-body span[style*="color: red"] {
-    color: red !important;
-}
-.content-body .ql-color-blue,
-.content-body span[style*="color: blue"] {
-    color: blue !important;
-}
-.content-body .ql-color-green,
-.content-body span[style*="color: green"] {
-    color: green !important;
-}
-.content-body .ql-color-purple,
-.content-body span[style*="color: purple"] {
-    color: purple !important;
-}
-.content-body .ql-color-orange,
-.content-body span[style*="color: orange"] {
-    color: orange !important;
-}
-.content-body .ql-color-black,
-.content-body span[style*="color: black"] {
-    color: black !important;
-}
-
-/* צבעי רקע */
-.content-body .ql-background-yellow,
-.content-body span[style*="background-color: yellow"] {
-    background-color: yellow !important;
-}
-.content-body .ql-background-lightblue,
-.content-body span[style*="background-color: lightblue"] {
-    background-color: lightblue !important;
-}
-.content-body .ql-background-lightgreen,
-.content-body span[style*="background-color: lightgreen"] {
-    background-color: lightgreen !important;
-}
-.content-body .ql-background-pink,
-.content-body span[style*="background-color: pink"] {
-    background-color: pink !important;
-}
-
-/* כותרות עם !important לדריסת סגנון אתר מחמיר */
-.content-body h1 {
-    font-size: 2em !important;
-    margin-top: 1em !important;
-    margin-bottom: 0.5em !important;
-    font-weight: bold !important;
-}
-.content-body h2 {
-    font-size: 1.75em !important;
-    margin-top: 1em !important;
-    margin-bottom: 0.5em !important;
-    font-weight: bold !important;
-}
-.content-body h3 {
-    font-size: 1.5em !important;
-    margin-top: 1em !important;
-    margin-bottom: 0.5em !important;
-    font-weight: bold !important;
-}
-.content-body h4 {
-    font-size: 1.25em !important;
-    margin-top: 1em !important;
-    margin-bottom: 0.5em !important;
-    font-weight: bold !important;
-}
-.content-body h5 {
-    font-size: 1.1em !important;
-    margin-top: 1em !important;
-    margin-bottom: 0.5em !important;
-    font-weight: bold !important;
-}
-.content-body h6 {
-    font-size: 1em !important;
-    margin-top: 1em !important;
-    margin-bottom: 0.5em !important;
-    font-weight: bold !important;
-}
-
-/* עיצובי טקסט */
-.content-body strong,
-.content-body b {
-    font-weight: bold !important;
-}
-.content-body em,
-.content-body i {
-    font-style: italic !important;
-}
-.content-body u {
-    text-decoration: underline !important;
-}
-.content-body s,
-.content-body strike {
-    text-decoration: line-through !important;
-}
-
-/* רשימות */
-.content-body ul {
-    list-style-type: disc !important;
-    margin: 1em 1.5em !important;
-    padding-right: 1em !important;
-}
-.content-body ol {
-    list-style-type: decimal !important;
-    margin: 1em 1.5em !important;
-    padding-right: 1em !important;
-}
-.content-body li {
-    margin-bottom: 0.5em !important;
-    display: list-item !important;
-}
-
-/* ציטוטים */
-.content-body blockquote {
-    border-right: 3px solid #ccc !important;
-    margin-right: 0 !important;
-    padding: 0.5em 1em !important;
-    background-color: #f9f9f9 !important;
-    margin-bottom: 1em !important;
-}
-
-/* קישורים */
-.content-body a {
-    color: #4062bb !important;
-    text-decoration: underline !important;
-}
-.content-body a:hover {
-    color: #5a7ed2 !important;
-}
-
-/* תמונות */
-.content-body img {
-    max-width: 100% !important;
-    height: auto !important;
-    margin: 1em 0 !important;
-}
-
-/* הזחות */
-.content-body .ql-indent-1 {
-    padding-right: 3em !important;
-}
-.content-body .ql-indent-2 {
-    padding-right: 6em !important;
-}
-
-/* קוד */
-.content-body pre,
-.content-body code {
-    background-color: #f0f0f0 !important;
-    padding: 0.2em 0.4em !important;
-    border-radius: 3px !important;
-    font-family: monospace !important;
-}
-.content-body pre {
-    padding: 1em !important;
-    overflow-x: auto !important;
-    margin-bottom: 1em !important;
-}
-
-/* רווחים בין פסקאות */
-.content-body p {
-    margin-bottom: 1em !important;
-}
         main {
             padding: 1.5rem 0;
             margin-top: 1rem;
@@ -583,6 +373,7 @@
             font-size: 1.1rem;
         }
 
+        /* בסיס לפסקאות באתר */
         .content-body p {
             margin-bottom: 1rem;
         }
@@ -682,200 +473,188 @@
             background-color: var(--primary-color);
             color: white;
         }
-/* סגנונות מקיפים לתוכן עשיר מהטופס */
-/* יישורי טקסט */
-.content-body [style*="text-align: center"] {
-    text-align: center !important;
-    display: block;
-}
-.content-body [style*="text-align: right"] {
-    text-align: right !important;
-    display: block;
-}
-.content-body [style*="text-align: left"] {
-    text-align: left !important;
-    display: block;
-}
-.content-body [style*="text-align: justify"] {
-    text-align: justify !important;
-    display: block;
-}
 
-/* סגנונות צבע ורקע */
-.content-body [style*="color:"] {
-    color: inherit !important;
-}
-.content-body [style*="background-color:"] {
-    background-color: inherit !important;
-}
+        /* ===== סגנונות חדשים לתמיכה בתוכן עשיר ===== */
 
-/* תמיכה במחלקות Quill מקוריות */
-.content-body .ql-align-center {
-    text-align: center !important;
-    display: block;
-}
-.content-body .ql-align-right {
-    text-align: right !important;
-    display: block;
-}
-.content-body .ql-align-left {
-    text-align: left !important;
-    display: block;
-}
-.content-body .ql-align-justify {
-    text-align: justify !important;
-    display: block;
-}
+        /* תמיכה בצבעים שמגיעים מהטופס - חשוב: תגים עם צבע ישירים */
+        .content-body [style*="color: red"],
+        .content-body [style*="color:red"],
+        .content-body span[style*="color: rgb(230, 0, 0)"],
+        .content-body span.ql-color-red,
+        .content-body span.color-red {
+            color: red !important;
+        }
 
-/* מחלקות צבע של Quill */
-.content-body .ql-color-red,
-.content-body [style*="color: red"] {
-    color: red !important;
-}
-.content-body .ql-color-blue,
-.content-body [style*="color: blue"] {
-    color: blue !important;
-}
-.content-body .ql-color-green,
-.content-body [style*="color: green"] {
-    color: green !important;
-}
-/* הוסף צבעים נוספים לפי הצורך */
+        .content-body [style*="color: blue"],
+        .content-body [style*="color:blue"],
+        .content-body span[style*="color: rgb(0, 0, 255)"],
+        .content-body span.ql-color-blue,
+        .content-body span.color-blue {
+            color: blue !important;
+        }
 
-/* מחלקות רקע של Quill */
-.content-body .ql-background-yellow,
-.content-body [style*="background-color: yellow"] {
-    background-color: yellow !important;
-}
-.content-body .ql-background-lightblue,
-.content-body [style*="background-color: lightblue"] {
-    background-color: lightblue !important;
-}
-/* הוסף צבעי רקע נוספים לפי הצורך */
+        .content-body [style*="color: green"],
+        .content-body [style*="color:green"],
+        .content-body span[style*="color: rgb(0, 128, 0)"],
+        .content-body span.ql-color-green,
+        .content-body span.color-green {
+            color: green !important;
+        }
 
-/* כותרות */
-.content-body h1 {
-    font-size: 2em;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
-.content-body h2 {
-    font-size: 1.75em;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
-.content-body h3 {
-    font-size: 1.5em;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
-.content-body h4 {
-    font-size: 1.25em;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
-.content-body h5 {
-    font-size: 1.1em;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
-.content-body h6 {
-    font-size: 1em;
-    margin-top: 1em;
-    margin-bottom: 0.5em;
-    font-weight: bold;
-}
+        .content-body [style*="color: purple"],
+        .content-body [style*="color:purple"],
+        .content-body span[style*="color: rgb(128, 0, 128)"],
+        .content-body span.ql-color-purple,
+        .content-body span.color-purple {
+            color: purple !important;
+        }
 
-/* עיצובי טקסט */
-.content-body strong,
-.content-body b {
-    font-weight: bold !important;
-}
-.content-body em,
-.content-body i {
-    font-style: italic !important;
-}
-.content-body u {
-    text-decoration: underline !important;
-}
-.content-body s,
-.content-body strike {
-    text-decoration: line-through !important;
-}
+        .content-body [style*="color: orange"],
+        .content-body [style*="color:orange"],
+        .content-body span[style*="color: rgb(255, 165, 0)"],
+        .content-body span.ql-color-orange,
+        .content-body span.color-orange {
+            color: orange !important;
+        }
 
-/* רשימות */
-.content-body ul,
-.content-body ol {
-    margin-right: 1.5em;
-    margin-bottom: 1em;
-    padding-right: 1em;
-}
-.content-body ul li {
-    list-style-type: disc;
-    margin-bottom: 0.5em;
-}
-.content-body ol li {
-    list-style-type: decimal;
-    margin-bottom: 0.5em;
-}
+        .content-body [style*="color: yellow"],
+        .content-body [style*="color:yellow"],
+        .content-body span[style*="color: rgb(255, 255, 0)"],
+        .content-body span.ql-color-yellow {
+            color: #806600 !important; /* צהוב כהה יותר לקריאות */
+        }
 
-/* ציטוטים */
-.content-body blockquote {
-    border-right: 3px solid #ccc;
-    margin-right: 0;
-    padding: 0.5em 1em;
-    background-color: #f9f9f9;
-    margin-bottom: 1em;
-}
+        /* צבעי רקע */
+        .content-body [style*="background-color: yellow"],
+        .content-body [style*="background-color:yellow"],
+        .content-body span[style*="background-color: rgb(255, 255, 0)"],
+        .content-body span.ql-background-yellow,
+        .content-body span.bg-yellow {
+            background-color: yellow !important;
+        }
 
-/* קישורים */
-.content-body a {
-    color: #4062bb;
-    text-decoration: underline;
-}
-.content-body a:hover {
-    color: #5a7ed2;
-}
+        .content-body [style*="background-color: lightblue"],
+        .content-body [style*="background-color:lightblue"],
+        .content-body span[style*="background-color: rgb(173, 216, 230)"],
+        .content-body span.bg-lightblue {
+            background-color: lightblue !important;
+        }
 
-/* תמונות */
-.content-body img {
-    max-width: 100%;
-    height: auto;
-    margin: 1em 0;
-}
+        .content-body [style*="background-color: lightgreen"],
+        .content-body [style*="background-color:lightgreen"],
+        .content-body span[style*="background-color: rgb(144, 238, 144)"],
+        .content-body span.bg-lightgreen {
+            background-color: lightgreen !important;
+        }
 
-/* הזחות */
-.content-body .ql-indent-1 {
-    padding-right: 3em;
-}
-.content-body .ql-indent-2 {
-    padding-right: 6em;
-}
-/* הוסף הזחות נוספות לפי הצורך */
+        .content-body [style*="background-color: pink"],
+        .content-body [style*="background-color:pink"],
+        .content-body span[style*="background-color: rgb(255, 192, 203)"],
+        .content-body span.bg-pink {
+            background-color: pink !important;
+        }
 
-/* קוד */
-.content-body pre,
-.content-body code {
-    background-color: #f0f0f0;
-    padding: 0.2em 0.4em;
-    border-radius: 3px;
-    font-family: monospace;
-}
-.content-body pre {
-    padding: 1em;
-    overflow-x: auto;
-    margin-bottom: 1em;
-}
+        /* יישורי טקסט מיוחדים */
+        .content-body p[style*="text-align: center"],
+        .content-body p[align="center"],
+        .content-body p.ql-align-center,
+        .content-body h1[style*="text-align: center"],
+        .content-body h2[style*="text-align: center"],
+        .content-body h3[style*="text-align: center"],
+        .content-body h4[style*="text-align: center"],
+        .content-body h5[style*="text-align: center"],
+        .content-body h6[style*="text-align: center"] {
+            text-align: center !important;
+            display: block !important;
+        }
 
-/* רווחים בין פסקאות */
-.content-body p {
-    margin-bottom: 1em;
-}
+        .content-body p[style*="text-align: right"],
+        .content-body p[align="right"],
+        .content-body p.ql-align-right,
+        .content-body h1[style*="text-align: right"],
+        .content-body h2[style*="text-align: right"],
+        .content-body h3[style*="text-align: right"],
+        .content-body h4[style*="text-align: right"],
+        .content-body h5[style*="text-align: right"],
+        .content-body h6[style*="text-align: right"] {
+            text-align: right !important;
+            display: block !important;
+        }
+
+        .content-body p[style*="text-align: left"],
+        .content-body p[align="left"],
+        .content-body p.ql-align-left,
+        .content-body h1[style*="text-align: left"],
+        .content-body h2[style*="text-align: left"],
+        .content-body h3[style*="text-align: left"],
+        .content-body h4[style*="text-align: left"],
+        .content-body h5[style*="text-align: left"],
+        .content-body h6[style*="text-align: left"] {
+            text-align: left !important;
+            display: block !important;
+        }
+
+        .content-body p[style*="text-align: justify"],
+        .content-body p[align="justify"],
+        .content-body p.ql-align-justify,
+        .content-body h1[style*="text-align: justify"],
+        .content-body h2[style*="text-align: justify"],
+        .content-body h3[style*="text-align: justify"],
+        .content-body h4[style*="text-align: justify"],
+        .content-body h5[style*="text-align: justify"],
+        .content-body h6[style*="text-align: justify"] {
+            text-align: justify !important;
+            display: block !important;
+        }
+
+        /* אפשרות גם ליישור תוכן בתוך div */
+        .content-body div[style*="text-align: center"],
+        .content-body div[align="center"] {
+            text-align: center !important;
+            display: block !important;
+        }
+
+        .content-body div[style*="text-align: right"],
+        .content-body div[align="right"] {
+            text-align: right !important;
+            display: block !important;
+        }
+
+        .content-body div[style*="text-align: left"],
+        .content-body div[align="left"] {
+            text-align: left !important;
+            display: block !important;
+        }
+
+        .content-body div[style*="text-align: justify"],
+        .content-body div[align="justify"] {
+            text-align: justify !important;
+            display: block !important;
+        }
+
+        /* תגים נוספים שעשויים לקבל יישור */
+        .content-body ul[style*="text-align: center"],
+        .content-body ol[style*="text-align: center"] {
+            text-align: center !important;
+            display: block !important;
+        }
+
+        /* תמיכה בתוכן עשיר מהטופס המשודרג */
+        .content-body .rich-text-content {
+            /* כבר יש בסיס לתוכן עשיר */
+        }
+
+        /* אפשר גם לאכוף את הסגנונות שבאים מהטופס המשודרג */
+        .content-body .color-forced .color-blue { color: #0066cc !important; }
+        .content-body .color-forced .color-red { color: #ff0000 !important; }
+        .content-body .color-forced .color-green { color: #008000 !important; }
+        .content-body .color-forced .color-purple { color: #800080 !important; }
+        .content-body .color-forced .color-orange { color: #ff6600 !important; }
+        .content-body .color-forced .bg-yellow { background-color: #ffff00 !important; }
+        .content-body .color-forced .bg-lightblue { background-color: #add8e6 !important; }
+        .content-body .color-forced .bg-lightgreen { background-color: #90ee90 !important; }
+        .content-body .color-forced .bg-pink { background-color: #ffc0cb !important; }
+        
         footer {
             background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
             color: white;
@@ -896,62 +675,62 @@
                 flex-direction: column;
                 align-items: center;
             }
-
+            
             .header-left, .header-right {
                 width: 100%;
                 text-align: center;
                 margin-bottom: 0.5rem;
                 justify-content: center;
             }
-
+            
             .nav-links {
                 padding: 0.5rem;
                 justify-content: flex-start;
                 overflow-x: auto;
             }
-
+            
             .content-container {
                 padding: 1rem;
             }
-
+            
             .archive-items {
                 grid-template-columns: 1fr;
             }
-
+            
             .site-title {
                 font-size: 1.5rem;
             }
-
+            
             .page-title, .content-title {
                 font-size: 1.4rem;
             }
-
+            
             .parasha-selector, .hebrew-date, .parasha-banner {
                 margin: 0.3rem;
                 font-size: 0.85rem;
             }
-
+            
             .content-meta {
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 5px;
             }
         }
-
+        
         /* מותאם לטלפונים קטנים במיוחד */
         @media (max-width: 480px) {
             .site-title {
                 font-size: 1.3rem;
             }
-
+            
             .site-subtitle {
                 font-size: 0.9rem;
             }
-
+            
             .content-body {
                 font-size: 1rem;
             }
-
+            
             .content-card {
                 min-width: 100%;
             }
@@ -979,7 +758,7 @@
                     </div>
                 </div>
             </div>
-
+            
             <nav>
                 <ul class="nav-links">
                     <li><a href="#" class="active" data-category="all">הכל</a></li>
@@ -1008,7 +787,7 @@
             <div class="loading">טוען את דבר התורה</div>
         </div>
 
-        <div class="archive-section">
+      <div class="archive-section">
             <h3 class="archive-title">דברי תורה מפרשות קודמות</h3>
             <div id="archive-items" class="archive-items">
                 <!-- כאן יוצגו דברי תורה מפרשות קודמות -->
@@ -1033,7 +812,7 @@
         // משתנה גלובלי לשמירת הפרשה הפעילה
         let activeParasha = '';
 
-        // פונקציה לנרמול מקפים (ממיר מקפים מיוחדים למקף רגיל)
+      // פונקציה לנרמול מקפים (ממיר מקפים מיוחדים למקף רגיל)
         function normalizeHyphens(text) {
             if (!text) return '';
             // החלף את המקף העברי (־) ומקפים מיוחדים אחרים במקף רגיל (-)
@@ -1351,7 +1130,7 @@
                     console.log(`מחפש תוכן עבור פרשת ${searchParasha}`);
 
                     // סינון תוצאות עבור פרשה נוכחית וקטגוריה נוכחית
-                    // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3),
+                    // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
                     // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
                     const results = rows.filter(row => {
                         if (row.length < 9) return false; // ודא שיש מספיק עמודות (כולל עמודת הזמינות)
@@ -1439,7 +1218,7 @@
                 }
 
                 // טעינת ארכיון פרשות קודמות (מפרשות שונות) - רק פריטים זמינים וגם לפי קטגוריה
-                // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3),
+                // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
                 // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
                 const otherParashot = rows.filter(row => {
                     if (row.length < 9) return false;
@@ -1501,7 +1280,7 @@
             selectorContainer.style.display = 'flex';
 
             entries.forEach((entry, index) => {
-                // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3),
+                // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
                 // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
                 const [timestamp, parasha, title, contentNotUsed, content, author, year, category, isAvailable] = entry;
 
@@ -1544,225 +1323,288 @@
         function parseCSV(text) {
             const rows = [];
             const lines = text.split('\n');
-
+            
             console.log("מספר שורות בקובץ CSV:", lines.length);
-
+            
             // נדלג על שורת הכותרות
             let currentRow = [];
             let currentValue = '';
             let inQuotes = false;
-
+            
             // עיבוד כל השורות
             for (let i = 1; i < lines.length; i++) {
                 const line = lines[i];
+                
+              // דלג על שורות ריקות
+               if (!inQuotes && line.trim() === '') continue;
+               
+               // עיבוד כל תו בשורה
+               for (let j = 0; j < line.length; j++) {
+                   const char = line[j];
+                   
+                   if (char === '"') {
+                       // טיפול במרכאות - החלף את מצב המרכאות
+                       inQuotes = !inQuotes;
+                   } else if (char === ',' && !inQuotes) {
+                       // סיום תא - הוסף את הערך הנוכחי לשורה
+                       currentRow.push(currentValue);
+                       currentValue = '';
+                   } else {
+                       // הוסף את התו לערך הנוכחי
+                       currentValue += char;
+                   }
+               }
+               
+               // אם אנחנו לא בתוך מרכאות, זה סוף השורה
+               if (!inQuotes) {
+                   // הוסף את התא האחרון
+                   currentRow.push(currentValue);
+                   // הוסף את השורה למערך התוצאות
+                   rows.push(currentRow);
+                   // איפוס למעבר לשורה הבאה
+                   currentRow = [];
+                   currentValue = '';
+               } else {
+                   // אם אנחנו בתוך מרכאות, הוסף שורה חדשה לערך הנוכחי
+                   currentValue += '\n';
+               }
+           }
+           
+           // אם יש שורה אחרונה שלא הסתיימה
+           if (currentRow.length > 0 || currentValue.length > 0) {
+               currentRow.push(currentValue);
+               rows.push(currentRow);
+           }
+           
+           return rows;
+       }
 
-                // דלג על שורות ריקות
-                if (!inQuotes && line.trim() === '') continue;
+       // פונקציה משופרת להצגת התוכן הראשי בעמוד
+       function displayContent(contentRow) {
+           // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
+           // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
+           const [timestamp, parasha, title, contentNotUsed, content, author, year, category, isAvailable] = contentRow;
 
-                // עיבוד כל תו בשורה
-                for (let j = 0; j < line.length; j++) {
-                    const char = line[j];
+           // הכנת תצוגת הקטגוריה
+           let categoryHtml = '';
+           if (category) {
+               const categoryKey = categoryMapping[category] || category.toLowerCase();
+               categoryHtml = `<span class="category-label">${category}</span>`;
+           }
 
-                    if (char === '"') {
-                        // טיפול במרכאות - החלף את מצב המרכאות
-                        inQuotes = !inQuotes;
-                    } else if (char === ',' && !inQuotes) {
-                        // סיום תא - הוסף את הערך הנוכחי לשורה
-                        currentRow.push(currentValue);
-                        currentValue = '';
-                    } else {
-                        // הוסף את התו לערך הנוכחי
-                        currentValue += char;
-                    }
-                }
+           // פורמט לתאריך הגשה
+           let timestampFormatted = '';
+           if (timestamp) {
+               try {
+                   const date = new Date(timestamp);
+                   if (!isNaN(date.getTime())) {
+                       timestampFormatted = date.toLocaleDateString('he-IL');
+                   } else {
+                       timestampFormatted = timestamp;
+                   }
+               } catch (e) {
+                   timestampFormatted = timestamp;
+               }
+           }
 
-                // אם אנחנו לא בתוך מרכאות, זה סוף השורה
-                if (!inQuotes) {
-                    // הוסף את התא האחרון
-                    currentRow.push(currentValue);
-                    // הוסף את השורה למערך התוצאות
-                    rows.push(currentRow);
-                    // איפוס למעבר לשורה הבאה
-                    currentRow = [];
-                    currentValue = '';
-                } else {
-                    // אם אנחנו בתוך מרכאות, הוסף שורה חדשה לערך הנוכחי
-                    currentValue += '\n';
-                }
-            }
+           // פונקציה לשיפור תצוגת התוכן עם תמיכה בעיצובים
+           function enhanceContentDisplay(htmlContent) {
+               // בעיית צבעים וטקסט עם סגנונות - הוסף אטריבוטים מיוחדים
+               let processedHtml = htmlContent;
+               
+               // וודא שזה לא ריק
+               if (!processedHtml || processedHtml.trim() === '') {
+                   return '<p>אין תוכן זמין.</p>';
+               }
+               
+               // חיזוק יישורי טקסט
+               processedHtml = processedHtml
+                   // מרכוז
+                   .replace(/<p style="text-align: center/g, '<p style="text-align: center !important; display: block;" align="center"')
+                   .replace(/<h([1-6]) style="text-align: center/g, '<h$1 style="text-align: center !important; display: block;" align="center"')
+                   .replace(/<div style="text-align: center/g, '<div style="text-align: center !important; display: block;" align="center"')
+                   
+                   // יישור לימין
+                   .replace(/<p style="text-align: right/g, '<p style="text-align: right !important; display: block;" align="right"')
+                   .replace(/<h([1-6]) style="text-align: right/g, '<h$1 style="text-align: right !important; display: block;" align="right"')
+                   .replace(/<div style="text-align: right/g, '<div style="text-align: right !important; display: block;" align="right"')
+                   
+                   // יישור לשמאל
+                   .replace(/<p style="text-align: left/g, '<p style="text-align: left !important; display: block;" align="left"')
+                   .replace(/<h([1-6]) style="text-align: left/g, '<h$1 style="text-align: left !important; display: block;" align="left"')
+                   .replace(/<div style="text-align: left/g, '<div style="text-align: left !important; display: block;" align="left"')
 
-            // אם יש שורה אחרונה שלא הסתיימה
-            if (currentRow.length > 0 || currentValue.length > 0) {
-                currentRow.push(currentValue);
-                rows.push(currentRow);
-            }
+                   // יישור מלא
+                   .replace(/<p style="text-align: justify/g, '<p style="text-align: justify !important; display: block;" align="justify"')
+                   .replace(/<h([1-6]) style="text-align: justify/g, '<h$1 style="text-align: justify !important; display: block;" align="justify"')
+                   .replace(/<div style="text-align: justify/g, '<div style="text-align: justify !important; display: block;" align="justify"')
 
-            return rows;
-        }
+                   // חיזוק תמיכה במחלקות יישור של Quill
+                   .replace(/<p class="ql-align-center/g, '<p class="ql-align-center" style="text-align: center !important; display: block;" align="center"')
+                   .replace(/<p class="ql-align-right/g, '<p class="ql-align-right" style="text-align: right !important; display: block;" align="right"')
+                   .replace(/<p class="ql-align-left/g, '<p class="ql-align-left" style="text-align: left !important; display: block;" align="left"')
+                   .replace(/<p class="ql-align-justify/g, '<p class="ql-align-justify" style="text-align: justify !important; display: block;" align="justify"')
+                   
+                   // חיזוק צבעים ספציפיים
+                   .replace(/color: red/g, 'color: red !important')
+                   .replace(/color: blue/g, 'color: blue !important')
+                   .replace(/color: green/g, 'color: green !important')
+                   .replace(/color: purple/g, 'color: purple !important')
+                   .replace(/color: orange/g, 'color: orange !important')
+                   .replace(/color: yellow/g, 'color: #806600 !important') // צהוב כהה יותר לקריאות
+                   
+                   // חיזוק צבעי רקע
+                   .replace(/background-color: yellow/g, 'background-color: yellow !important')
+                   .replace(/background-color: lightblue/g, 'background-color: lightblue !important')
+                   .replace(/background-color: lightgreen/g, 'background-color: lightgreen !important')
+                   .replace(/background-color: pink/g, 'background-color: pink !important');
 
-        // הצגת התוכן הראשי בעמוד - מעודכן להצגת קטגוריה ואינדקסים חדשים
-        function displayContent(contentRow) {
-            // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3),
-            // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
-            const [timestamp, parasha, title, contentNotUsed, content, author, year, category, isAvailable] = contentRow;
+               // וודא שיש עטיפה כוללת שמאפשרת סגנונות
+               if (!processedHtml.includes('<div class="rich-text-content"')) {
+                   processedHtml = '<div class="rich-text-content enhanced-content">' + processedHtml + '</div>';
+               }
+               
+               return processedHtml;
+           }
 
-            // הכנת תצוגת הקטגוריה
-            let categoryHtml = '';
-            if (category) {
-                const categoryKey = categoryMapping[category] || category.toLowerCase();
-                categoryHtml = `<span class="category-label">${category}</span>`;
-            }
+           // שיפור תצוגת התוכן לפני הצגה
+           const enhancedContent = enhanceContentDisplay(content);
 
-            // פורמט לתאריך הגשה
-            let timestampFormatted = '';
-            if (timestamp) {
-                try {
-                    const date = new Date(timestamp);
-                    if (!isNaN(date.getTime())) {
-                        timestampFormatted = date.toLocaleDateString('he-IL');
-                    } else {
-                        timestampFormatted = timestamp;
-                    }
-                } catch (e) {
-                    timestampFormatted = timestamp;
-                }
-            }
+           const contentHtml = `
+               <div class="content-container">
+                   <div class="content-header">
+                       <h3 class="content-title">
+                           ${year ? `<span class="year-badge">${year}</span>` : ''}
+                           ${title}
+                       </h3>
+                       <div class="content-meta">
+                           ${categoryHtml}
+                           <span>מאת: ${author}</span>
+                           ${timestamp ? `<span> | נכתב בתאריך: ${timestampFormatted}</span>` : ''}
+                       </div>
+                   </div>
+                   <div class="content-body">
+                       ${enhancedContent}
+                   </div>
+               </div>
+           `;
 
-            const contentHtml = `
-                <div class="content-container">
-                    <div class="content-header">
-                        <h3 class="content-title">
-                            ${year ? `<span class="year-badge">${year}</span>` : ''}
-                            ${title}
-                        </h3>
-                        <div class="content-meta">
-                            ${categoryHtml}
-                            <span>מאת: ${author}</span>
-                            ${timestamp ? `<span> | נכתב בתאריך: ${timestampFormatted}</span>` : ''}
-                        </div>
-                    </div>
-                    <div class="content-body">
-                        ${content}
-                    </div>
-                </div>
-            `;
+           document.getElementById('content-area').innerHTML = contentHtml;
+       }
 
-            document.getElementById('content-area').innerHTML = contentHtml;
-        }
+       // טעינת ארכיון פרשות קודמות - מעודכן לסדר העמודות החדש
+       function loadArchiveItems(rows) {
+           const archiveContainer = document.getElementById('archive-items');
+           archiveContainer.innerHTML = '';
 
-        // טעינת ארכיון פרשות קודמות - מעודכן לסדר העמודות החדש
-        function loadArchiveItems(rows) {
-            const archiveContainer = document.getElementById('archive-items');
-            archiveContainer.innerHTML = '';
+           // מיון השורות לפי תאריך הגשה (מהחדש לישן)
+           rows.sort((a, b) => {
+               if (a.length < 1 || b.length < 1) return 0;
+               const dateA = new Date(a[0]);
+               const dateB = new Date(b[0]);
+               return dateB - dateA;
+           });
 
-            // מיון השורות לפי תאריך הגשה (מהחדש לישן)
-            rows.sort((a, b) => {
-                if (a.length < 1 || b.length < 1) return 0;
-                const dateA = new Date(a[0]);
-                const dateB = new Date(b[0]);
-                return dateB - dateA;
-            });
+           // מספר מוגבל של פריטים להצגה בארכיון
+           const maxItems = 6;
+           let count = 0;
 
-            // מספר מוגבל של פריטים להצגה בארכיון
-            const maxItems = 6;
-            let count = 0;
+           for (const row of rows) {
+               // ודא שיש מספיק עמודות בשורה
+               if (row.length < 9) continue;
 
-            for (const row of rows) {
-                // ודא שיש מספיק עמודות בשורה
-                if (row.length < 9) continue;
+               // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3), 
+               // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
+               const [timestamp, parasha, title, contentNotUsed, content, author, year, category, isAvailable] = row;
 
-                // לפי סדר העמודות החדש: A:זמן הגשה (0), B:פרשה (1), C:כותרת (2), D:תוכן לא רלוונטי (3),
-                // E:תוכן (4), F:שם הכותב (5), G:שנה (6), H:קטגוריה (7), I:זמין (8)
-                const [timestamp, parasha, title, contentNotUsed, content, author, year, category, isAvailable] = row;
+               // דלג על שורות לא תקינות
+               if (!parasha || !title) continue;
 
-                // דלג על שורות לא תקינות
-                if (!parasha || !title) continue;
+               // הגבלת מספר הפריטים
+               if (count >= maxItems) break;
 
-                // הגבלת מספר הפריטים
-                if (count >= maxItems) break;
+               // הכנת תצוגת הקטגוריה
+               let categoryHtml = '';
+               if (category) {
+                   const displayCategory = category;
+                   categoryHtml = `<span class="category-label">${displayCategory}</span>`;
+               }
 
-                // הכנת תצוגת הקטגוריה
-                let categoryHtml = '';
-                if (category) {
-                    const displayCategory = category;
-                    categoryHtml = `<span class="category-label">${displayCategory}</span>`;
-                }
+               const archiveItem = document.createElement('div');
+               archiveItem.className = 'archive-item';
+               archiveItem.innerHTML = `
+                   <h4>${title}</h4>
+                   <p>פרשת ${parasha} ${year ? `(${year})` : ''}</p>
+                   <p>${categoryHtml} מאת: ${author}</p>
+                   <a href="#" onclick="selectParashaAndCategory('${parasha}', '${categoryMapping[category] || category?.toLowerCase() || 'all'}'); return false;">לקריאה</a>
+               `;
 
-                const archiveItem = document.createElement('div');
-                archiveItem.className = 'archive-item';
-                archiveItem.innerHTML = `
-                    <h4>${title}</h4>
-                    <p>פרשת ${parasha} ${year ? `(${year})` : ''}</p>
-                    <p>${categoryHtml} מאת: ${author}</p>
-                    <a href="#" onclick="selectParashaAndCategory('${parasha}', '${categoryMapping[category] || category?.toLowerCase() || 'all'}'); return false;">לקריאה</a>
-                `;
+               archiveContainer.appendChild(archiveItem);
+               count++;
+           }
 
-                archiveContainer.appendChild(archiveItem);
-                count++;
-            }
+           if (count === 0) {
+               let message = '';
+               if (activeCategory !== 'all') {
+                   message = `אין דברי תורה קודמים בקטגוריית ${categoryLabels[activeCategory]} בארכיון.`;
+               } else {
+                   message = 'אין דברי תורה קודמים בארכיון.';
+               }
 
-            if (count === 0) {
-                let message = '';
-                if (activeCategory !== 'all') {
-                    message = `אין דברי תורה קודמים בקטגוריית ${categoryLabels[activeCategory]} בארכיון.`;
-                } else {
-                    message = 'אין דברי תורה קודמים בארכיון.';
-                }
+               archiveContainer.innerHTML = `<p style="text-align: center; grid-column: 1/-1;">${message}</p>`;
+           }
+       }
 
-                archiveContainer.innerHTML = `<p style="text-align: center; grid-column: 1/-1;">${message}</p>`;
-            }
-        }
+       // פונקציה לבחירת פרשה וקטגוריה בבת אחת
+       function selectParashaAndCategory(parasha, category) {
+           // עדכן את הפרשה הנבחרת בתיבת הבחירה
+           const selectElement = document.getElementById('parasha-select');
+           for (let i = 0; i < selectElement.options.length; i++) {
+               if (selectElement.options[i].value === parasha) {
+                   selectElement.selectedIndex = i;
+                   break;
+               }
+           }
 
-        // פונקציה לבחירת פרשה וקטגוריה בבת אחת
-        function selectParashaAndCategory(parasha, category) {
-            // עדכן את הפרשה הנבחרת בתיבת הבחירה
-            const selectElement = document.getElementById('parasha-select');
-            for (let i = 0; i < selectElement.options.length; i++) {
-                if (selectElement.options[i].value === parasha) {
-                    selectElement.selectedIndex = i;
-                    break;
-                }
-            }
+           // טען את התוכן לפי הפרשה והקטגוריה שנבחרו
+           loadParashaContent(parasha, category);
+       }
 
-            // טען את התוכן לפי הפרשה והקטגוריה שנבחרו
-            loadParashaContent(parasha, category);
-        }
+       // הוסף ניהול אירועי קטגוריה
+       function setupCategoryHandlers() {
+           document.querySelectorAll('.nav-links a').forEach(link => {
+               link.addEventListener('click', function(e) {
+                   e.preventDefault();
+                   const category = this.getAttribute('data-category');
 
-        // הוסף ניהול אירועי קטגוריה
-        function setupCategoryHandlers() {
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const category = this.getAttribute('data-category');
+                   // טען תוכן חדש לפי הקטגוריה הנבחרת
+                   loadParashaContent(activeParasha, category);
+               });
+           });
+       }
 
-                    // טען תוכן חדש לפי הקטגוריה הנבחרת
-                    loadParashaContent(activeParasha, category);
-                });
-            });
-        }
+       // אתחול הדף כשהוא נטען
+       window.addEventListener('DOMContentLoaded', async () => {
+           try {
+               // הצג תאריך עברי
+               await displayHebrewDate();
 
-        // אתחול הדף כשהוא נטען
-        window.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // הצג תאריך עברי
-                await displayHebrewDate();
+               // טען את רשימת הפרשות עם הפרשה הנוכחית מסומנת
+               const currentParasha = await loadParashotOptions();
 
-                // טען את רשימת הפרשות עם הפרשה הנוכחית מסומנת
-                const currentParasha = await loadParashotOptions();
+               // הגדר מטפלי אירועים לקטגוריות
+               setupCategoryHandlers();
 
-                // הגדר מטפלי אירועים לקטגוריות
-                setupCategoryHandlers();
-
-                // טען את התוכן של הפרשה הנוכחית
-                await loadParashaContent(currentParasha, 'all');
-            } catch (error) {
-                console.error('שגיאה באתחול הדף:', error);
-                // טען גרסה פשוטה במקרה של שגיאה
-                document.querySelector('.page-title').textContent = 'דבר תורה לפרשת השבוע';
-                document.getElementById('current-parasha-name').textContent = 'בראשית';
-                loadParashaContent('בראשית', 'all');
-            }
-        });
-    </script>
+               // טען את התוכן של הפרשה הנוכחית
+               await loadParashaContent(currentParasha, 'all');
+           } catch (error) {
+               console.error('שגיאה באתחול הדף:', error);
+               // טען גרסה פשוטה במקרה של שגיאה
+               document.querySelector('.page-title').textContent = 'דבר תורה לפרשת השבוע';
+               document.getElementById('current-parasha-name').textContent = 'בראשית';
+               loadParashaContent('בראשית', 'all');
+           }
+       });
+   </script>
 </body>
 </html>

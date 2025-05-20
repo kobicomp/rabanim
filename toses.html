@@ -427,48 +427,47 @@
             display: block;
         }
 
-        /* תמיכה בצבעים וסגנונות בתצוגה מקדימה */
+        /* תמיכה בצבעים לתצוגה מקדימה */
         #preview-content .color-blue,
-        #preview-content span[style*="color: rgb(0, 102, 204)"],
-        #preview-content span[style*="color: #0066cc"] {
+        #preview-content [style*="color: #0066cc"],
+        #preview-content [style*="color: rgb(0, 102, 204)"] {
             color: #0066cc !important;
         }
 
         #preview-content .color-red,
-        #preview-content span[style*="color: rgb(255, 0, 0)"],
-        #preview-content span[style*="color: #ff0000"] {
+        #preview-content [style*="color: #ff0000"],
+        #preview-content [style*="color: rgb(255, 0, 0)"] {
             color: #ff0000 !important;
         }
 
         #preview-content .color-green,
-        #preview-content span[style*="color: rgb(0, 128, 0)"],
-        #preview-content span[style*="color: #008000"] {
+        #preview-content [style*="color: #008000"],
+        #preview-content [style*="color: rgb(0, 128, 0)"] {
             color: #008000 !important;
         }
 
         #preview-content .color-purple,
-        #preview-content span[style*="color: rgb(128, 0, 128)"],
-        #preview-content span[style*="color: rgb(153, 51, 255)"],
-        #preview-content span[style*="color: #800080"],
-        #preview-content span[style*="color: #9933ff"] {
+        #preview-content [style*="color: #800080"],
+        #preview-content [style*="color: rgb(128, 0, 128)"],
+        #preview-content [style*="color: rgb(153, 51, 255)"] {
             color: #800080 !important;
         }
 
         #preview-content .color-orange,
-        #preview-content span[style*="color: rgb(255, 102, 0)"],
-        #preview-content span[style*="color: #ff6600"] {
+        #preview-content [style*="color: #ff6600"],
+        #preview-content [style*="color: rgb(255, 102, 0)"] {
             color: #ff6600 !important;
         }
 
         #preview-content .bg-yellow,
-        #preview-content span[style*="background-color: rgb(255, 255, 0)"],
-        #preview-content span[style*="background-color: #ffff00"] {
+        #preview-content [style*="background-color: #ffff00"],
+        #preview-content [style*="background-color: rgb(255, 255, 0)"] {
             background-color: #ffff00 !important;
         }
 
         #preview-content .bg-blue-dark,
-        #preview-content span[style*="background-color: rgb(0, 102, 204)"],
-        #preview-content span[style*="background-color: #0066cc"] {
+        #preview-content [style*="background-color: #0066cc"],
+        #preview-content [style*="background-color: rgb(0, 102, 204)"] {
             background-color: #0066cc !important;
             color: white !important;
         }
@@ -729,198 +728,225 @@
                     } else if (tabId === 'preview') {
                         // עדכון תצוגה מקדימה עם התוכן המעוצב
                         const htmlContent = quill.root.innerHTML;
-                        const processedHtml = preserveAlignment(htmlContent);
-                        previewContent.innerHTML = processedHtml;
-                        editorContainer.style.display = 'none';
-                        previewContainer.style.display = 'block';
-                    }
-                });
-            });
-
-            // פונקציה משודרגת לשימור מאפייני העיצוב בתוכן ויצירת מבנה אחיד
-            function preserveAlignment(html) {
-                // ראשית, נבדוק אם יש תוכן
-                if (!html || html.trim() === '') return '';
-                
-                // נרכיב את המעטפת של התוכן העשיר
-                let processedHtml = '<div class="rich-text-content color-forced">\n';
-                
-                // נוסיף סגנונות CSS מובנים לאכיפת צבעים
-                processedHtml += '<style>\n';
-                processedHtml += '/* סגנונות מקומיים לאכיפת צבעים */\n';
-                processedHtml += '.color-blue { color: #0066cc !important; }\n';
-                processedHtml += '.color-red { color: #ff0000 !important; }\n';
-                processedHtml += '.color-green { color: #008000 !important; }\n';
-                processedHtml += '.color-purple { color: #800080 !important; }\n';
-                processedHtml += '.color-orange { color: #ff6600 !important; }\n';
-                processedHtml += '.bg-yellow { background-color: #ffff00 !important; }\n';
-                processedHtml += '.bg-lightblue { background-color: #add8e6 !important; }\n';
-                processedHtml += '.bg-lightgreen { background-color: #90ee90 !important; }\n';
-                processedHtml += '.bg-pink { background-color: #ffc0cb !important; }\n';
-                processedHtml += '.bg-blue-dark { background-color: #0066cc !important; color: white !important; }\n';
-                processedHtml += '</style>\n';
-                
-                // טיפול מקיף בכל תגיות HTML הרלוונטיות
-                let content = html;
-                
-                // טיפול ביישורי טקסט
-                // 1. טיפול במחלקות של quill לכל סוגי האלמנטים
-                const alignElements = ['p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'div', 'blockquote', 'ul', 'ol'];
-                const alignDirections = ['center', 'right', 'left', 'justify'];
-                
-                alignElements.forEach(elem => {
-                    alignDirections.forEach(dir => {
-                        const regClass = new RegExp(`<${elem} class="ql-align-${dir}`, 'g');
-                        content = content.replace(regClass, 
-                            `<${elem} class="ql-align-${dir}" style="text-align: ${dir} !important;" align="${dir}"`);
                         
-                        const regStyle = new RegExp(`<${elem} style="text-align: ${dir}`, 'g');
-                        content = content.replace(regStyle, 
-                            `<${elem} class="ql-align-${dir}" style="text-align: ${dir} !important;" align="${dir}"`);
-                    });
-                });
-                
-                // 2. טיפול בכיוון טקסט
-                const rtlElements = ['p', 'div', 'blockquote', 'ul', 'ol', 'li', 'span'];
-                rtlElements.forEach(elem => {
-                    const regRtl = new RegExp(`<${elem} class="ql-direction-rtl`, 'g');
-                    content = content.replace(regRtl, 
-                        `<${elem} class="ql-direction-rtl" dir="rtl" style="direction: rtl !important;`);
-                });
-                
-                // 3. טיפול בצבעי טקסט RGB
-                // כחול
-                content = content
-                    .replace(/<span style="color: rgb\(0, 0, 255\);/g, '<span class="color-blue" style="color: #0066cc !important;')
-                    .replace(/<span style="color: rgb\(0, 102, 204\);/g, '<span class="color-blue" style="color: #0066cc !important;')
-                    .replace(/<span style="color: rgb\(51, 102, 255\);/g, '<span class="color-blue" style="color: #0066cc !important;')
-                    .replace(/<span style="color: #0000ff;/g, '<span class="color-blue" style="color: #0066cc !important;')
-                    .replace(/<span style="color: #0066cc;/g, '<span class="color-blue" style="color: #0066cc !important;');
-                
-                // אדום
-                content = content
-                    .replace(/<span style="color: rgb\(255, 0, 0\);/g, '<span class="color-red" style="color: #ff0000 !important;')
-                    .replace(/<span style="color: rgb\(230, 0, 0\);/g, '<span class="color-red" style="color: #ff0000 !important;')
-                    .replace(/<span style="color: #ff0000;/g, '<span class="color-red" style="color: #ff0000 !important;');
-                
-                // ירוק
-                content = content
-                    .replace(/<span style="color: rgb\(0, 128, 0\);/g, '<span class="color-green" style="color: #008000 !important;')
-                    .replace(/<span style="color: rgb\(0, 138, 0\);/g, '<span class="color-green" style="color: #008000 !important;')
-                    .replace(/<span style="color: #008000;/g, '<span class="color-green" style="color: #008000 !important;');
-                
-                // סגול
-                content = content
-                    .replace(/<span style="color: rgb\(128, 0, 128\);/g, '<span class="color-purple" style="color: #800080 !important;')
-                    .replace(/<span style="color: rgb\(153, 51, 255\);/g, '<span class="color-purple" style="color: #800080 !important;')
-                    .replace(/<span style="color: #800080;/g, '<span class="color-purple" style="color: #800080 !important;')
-                    .replace(/<span style="color: #9933ff;/g, '<span class="color-purple" style="color: #800080 !important;');
-                
-                // כתום
-                content = content
-                    .replace(/<span style="color: rgb\(255, 165, 0\);/g, '<span class="color-orange" style="color: #ff6600 !important;')
-                    .replace(/<span style="color: rgb\(255, 102, 0\);/g, '<span class="color-orange" style="color: #ff6600 !important;')
-                    .replace(/<span style="color: #ffa500;/g, '<span class="color-orange" style="color: #ff6600 !important;')
-                    .replace(/<span style="color: #ff6600;/g, '<span class="color-orange" style="color: #ff6600 !important;');
-                
-                // 4. טיפול בצבעי רקע RGB
-                // צהוב
-                content = content
-                    .replace(/<span style="background-color: rgb\(255, 255, 0\);/g, '<span class="bg-yellow" style="background-color: #ffff00 !important;')
-                    .replace(/<span style="background-color: #ffff00;/g, '<span class="bg-yellow" style="background-color: #ffff00 !important;');
-                
-                // כחול בהיר
-                content = content
-                    .replace(/<span style="background-color: rgb\(173, 216, 230\);/g, '<span class="bg-lightblue" style="background-color: #add8e6 !important;')
-                    .replace(/<span style="background-color: #add8e6;/g, '<span class="bg-lightblue" style="background-color: #add8e6 !important;');
-                
-                // ירוק בהיר
-                content = content
-                    .replace(/<span style="background-color: rgb\(144, 238, 144\);/g, '<span class="bg-lightgreen" style="background-color: #90ee90 !important;')
-                    .replace(/<span style="background-color: #90ee90;/g, '<span class="bg-lightgreen" style="background-color: #90ee90 !important;');
-                
-                // ורוד
-                content = content
-                    .replace(/<span style="background-color: rgb\(255, 192, 203\);/g, '<span class="bg-pink" style="background-color: #ffc0cb !important;')
-                    .replace(/<span style="background-color: #ffc0cb;/g, '<span class="bg-pink" style="background-color: #ffc0cb !important;');
-                
-                // כחול כהה
-                content = content
-                    .replace(/<span style="background-color: rgb\(0, 102, 204\);/g, '<span class="bg-blue-dark" style="background-color: #0066cc !important; color: white !important;')
-                    .replace(/<span style="background-color: #0066cc;/g, '<span class="bg-blue-dark" style="background-color: #0066cc !important; color: white !important;');
-                
-                // 5. המרת מחלקות צבע של Quill למחלקות שלנו
-                content = content
-                    .replace(/<span class="ql-color-red/g, '<span class="color-red')
-                    .replace(/<span class="ql-color-blue/g, '<span class="color-blue')
-                    .replace(/<span class="ql-color-green/g, '<span class="color-green')
-                    .replace(/<span class="ql-color-purple/g, '<span class="color-purple')
-                    .replace(/<span class="ql-color-orange/g, '<span class="color-orange')
-                    .replace(/<span class="ql-background-yellow/g, '<span class="bg-yellow');
+                        // קודם טפל בבעיות הידועות, ואז בצע עיבוד מלא
+                       const preparedHtml = prepareHtmlBeforeProcessing(htmlContent);
+                       const processedHtml = createFormattedOutput(preparedHtml);
+                       
+                       previewContent.innerHTML = processedHtml;
+                       editorContainer.style.display = 'none';
+                       previewContainer.style.display = 'block';
+                   }
+               });
+           });
 
-                // הוספת התוכן המעובד
-                processedHtml += content;
-                
-                // סגירת המעטפת
-                processedHtml += '\n</div>';
-                
-                return processedHtml;
-            }
+           // פונקציה לטיפול מקדים בבעיות ידועות
+           function prepareHtmlBeforeProcessing(html) {
+               // בדוק אם התוכן ריק
+               if (!html || html.trim() === '') {
+                   return '';
+               }
 
-            // לפני שליחת הטופס, שמור את התוכן HTML בשדה המוסתר
-            form.addEventListener('submit', function(e) {
-                // שמירת התוכן HTML בשדה מוסתר עם שמירה על מאפייני יישור והצבעים
-                const htmlContent = quill.root.innerHTML;
+               let result = html;
+               
+               // בדוק אם יש בעיה עם צבע סגול, שמופיע באופן לא תקין
+               if (result.includes('rgb(153, 51, 255)')) {
+                   console.log("טיפול מיוחד בצבע סגול");
+                   // החלף את הצבע הסגול בתג span עם מחלקה מתאימה
+                   result = result.replace(/<span style="color: rgb\(153, 51, 255\);([^>]*)>/g, 
+                       '<span class="color-purple" style="color: #800080 !important;$1>');
+               }
+               
+               // בדוק אם יש בעיה עם צבע כחול כהה
+               if (result.includes('rgb(0, 102, 204)')) {
+                   console.log("טיפול מיוחד בצבע כחול כהה");
+                   // החלף את הצבע הכחול בתג span עם מחלקה מתאימה
+                   result = result.replace(/<span style="color: rgb\(0, 102, 204\);([^>]*)>/g, 
+                       '<span class="color-blue" style="color: #0066cc !important;$1>');
+               }
+               
+               // בדוק אם יש בעיה עם רקע כחול כהה
+               if (result.includes('background-color: rgb(0, 102, 204)')) {
+                   console.log("טיפול מיוחד ברקע כחול כהה");
+                   // החלף את הרקע הכחול בתג span עם מחלקה מתאימה
+                   result = result.replace(/<span style="background-color: rgb\(0, 102, 204\);([^>]*)>/g, 
+                       '<span class="bg-blue-dark" style="background-color: #0066cc !important; color: white !important;$1>');
+               }
+               
+               return result;
+           }
 
-                // וידוא שמאפייני היישור והצבעים נשמרים כראוי
-                const processedHtml = preserveAlignment(htmlContent);
-                contentInput.value = processedHtml;
+           // פונקציה חדשה ליצירת פלט HTML מעוצב
+           function createFormattedOutput(html) {
+               // בדוק אם התוכן ריק
+               if (!html || html.trim() === '') {
+                   return '<p>אין תוכן</p>';
+               }
+               
+               // יצירת מבנה הקוד שראינו שעובד באתר
+               let output = '<div class="rich-text-content color-forced">\n';
+               
+               // הוספת תגית סגנון עם הגדרות צבעים
+               output += '<style>\n';
+               output += '/* סגנונות מקומיים לאכיפת צבעים */\n';
+               output += '.color-blue { color: #0066cc !important; }\n';
+               output += '.color-red { color: #ff0000 !important; }\n';
+               output += '.color-green { color: #008000 !important; }\n';
+               output += '.color-purple { color: #800080 !important; }\n';
+               output += '.color-orange { color: #ff6600 !important; }\n';
+               output += '.bg-yellow { background-color: #ffff00 !important; }\n';
+               output += '.bg-lightblue { background-color: #add8e6 !important; }\n';
+               output += '.bg-lightgreen { background-color: #90ee90 !important; }\n';
+               output += '.bg-pink { background-color: #ffc0cb !important; }\n';
+               output += '.bg-blue-dark { background-color: #0066cc !important; color: white !important; }\n';
+               output += '</style>\n';
+               
+               // טיפול בתוכן - שמירה על יישורים וסגנונות
+               let content = html;
+               
+               // יישור
+               content = content.replace(/<p class="ql-align-center">/g, '<p class="ql-align-center" style="text-align: center !important;" align="center">');
+               content = content.replace(/<p class="ql-align-right">/g, '<p class="ql-align-right" style="text-align: right !important;" align="right">');
+               content = content.replace(/<p class="ql-align-left">/g, '<p class="ql-align-left" style="text-align: left !important;" align="left">');
+               content = content.replace(/<p class="ql-align-justify">/g, '<p class="ql-align-justify" style="text-align: justify !important;" align="justify">');
+               
+               // כיוון טקסט
+               content = content.replace(/<p class="ql-direction-rtl/g, '<p class="ql-direction-rtl" dir="rtl" style="direction: rtl !important;');
+               content = content.replace(/<blockquote class="ql-direction-rtl/g, '<blockquote class="ql-direction-rtl" dir="rtl" style="direction: rtl !important;');
+               content = content.replace(/<li class="ql-direction-rtl/g, '<li class="ql-direction-rtl" dir="rtl" style="direction: rtl !important;');
+               content = content.replace(/<ul class="ql-direction-rtl/g, '<ul class="ql-direction-rtl" dir="rtl" style="direction: rtl !important;');
+               
+               // צבעי טקסט - המרת סגנונות Quill למחלקות
+               content = content.replace(/<span class="ql-color-red/g, '<span class="color-red');
+               content = content.replace(/<span class="ql-color-blue/g, '<span class="color-blue');
+               content = content.replace(/<span class="ql-color-green/g, '<span class="color-green');
+               content = content.replace(/<span class="ql-color-purple/g, '<span class="color-purple');
+               content = content.replace(/<span class="ql-color-orange/g, '<span class="color-orange');
+               content = content.replace(/<span class="ql-background-yellow/g, '<span class="bg-yellow');
+               
+               // מיפוי צבעי RGB למחלקות צבעים - 
+               // כחול
+               const blueColorPattern = /style="color: rgb\(0, 0, 255\);|style="color: rgb\(0, 102, 204\);|style="color: #0000ff;|style="color: #0066cc;/;
+               if (content.match(blueColorPattern)) {
+                   content = content.replace(/<span style="color: rgb\(0, 0, 255\);/g, '<span class="color-blue" style="color: #0066cc !important;');
+                   content = content.replace(/<span style="color: rgb\(0, 102, 204\);/g, '<span class="color-blue" style="color: #0066cc !important;');
+                   content = content.replace(/<span style="color: #0000ff;/g, '<span class="color-blue" style="color: #0066cc !important;');
+                   content = content.replace(/<span style="color: #0066cc;/g, '<span class="color-blue" style="color: #0066cc !important;');
+               }
+               
+               // אדום
+               const redColorPattern = /style="color: rgb\(255, 0, 0\);|style="color: rgb\(230, 0, 0\);|style="color: #ff0000;/;
+               if (content.match(redColorPattern)) {
+                   content = content.replace(/<span style="color: rgb\(255, 0, 0\);/g, '<span class="color-red" style="color: #ff0000 !important;');
+                   content = content.replace(/<span style="color: rgb\(230, 0, 0\);/g, '<span class="color-red" style="color: #ff0000 !important;');
+                   content = content.replace(/<span style="color: #ff0000;/g, '<span class="color-red" style="color: #ff0000 !important;');
+               }
+               
+               // ירוק
+               const greenColorPattern = /style="color: rgb\(0, 128, 0\);|style="color: rgb\(0, 138, 0\);|style="color: #008000;/;
+               if (content.match(greenColorPattern)) {
+                   content = content.replace(/<span style="color: rgb\(0, 128, 0\);/g, '<span class="color-green" style="color: #008000 !important;');
+                   content = content.replace(/<span style="color: rgb\(0, 138, 0\);/g, '<span class="color-green" style="color: #008000 !important;');
+                   content = content.replace(/<span style="color: #008000;/g, '<span class="color-green" style="color: #008000 !important;');
+               }
+               
+               // סגול
+               const purpleColorPattern = /style="color: rgb\(128, 0, 128\);|style="color: rgb\(153, 51, 255\);|style="color: #800080;|style="color: #9933ff;/;
+               if (content.match(purpleColorPattern)) {
+                   content = content.replace(/<span style="color: rgb\(128, 0, 128\);/g, '<span class="color-purple" style="color: #800080 !important;');
+                   content = content.replace(/<span style="color: rgb\(153, 51, 255\);/g, '<span class="color-purple" style="color: #800080 !important;');
+                   content = content.replace(/<span style="color: #800080;/g, '<span class="color-purple" style="color: #800080 !important;');
+                   content = content.replace(/<span style="color: #9933ff;/g, '<span class="color-purple" style="color: #800080 !important;');
+               }
+               
+               // כתום
+               const orangeColorPattern = /style="color: rgb\(255, 165, 0\);|style="color: rgb\(255, 102, 0\);|style="color: #ffa500;|style="color: #ff6600;/;
+               if (content.match(orangeColorPattern)) {
+                   content = content.replace(/<span style="color: rgb\(255, 165, 0\);/g, '<span class="color-orange" style="color: #ff6600 !important;');
+                   content = content.replace(/<span style="color: rgb\(255, 102, 0\);/g, '<span class="color-orange" style="color: #ff6600 !important;');
+                   content = content.replace(/<span style="color: #ffa500;/g, '<span class="color-orange" style="color: #ff6600 !important;');
+                   content = content.replace(/<span style="color: #ff6600;/g, '<span class="color-orange" style="color: #ff6600 !important;');
+               }
+               
+               // רקע צהוב
+               const yellowBgPattern = /style="background-color: rgb\(255, 255, 0\);|style="background-color: #ffff00;/;
+               if (content.match(yellowBgPattern)) {
+                   content = content.replace(/<span style="background-color: rgb\(255, 255, 0\);/g, '<span class="bg-yellow" style="background-color: #ffff00 !important;');
+                   content = content.replace(/<span style="background-color: #ffff00;/g, '<span class="bg-yellow" style="background-color: #ffff00 !important;');
+               }
+               
+               // רקע כחול כהה
+               const darkBlueBgPattern = /style="background-color: rgb\(0, 102, 204\);|style="background-color: #0066cc;/;
+               if (content.match(darkBlueBgPattern)) {
+                   content = content.replace(/<span style="background-color: rgb\(0, 102, 204\);/g, '<span class="bg-blue-dark" style="background-color: #0066cc !important; color: white !important;');
+                   content = content.replace(/<span style="background-color: #0066cc;/g, '<span class="bg-blue-dark" style="background-color: #0066cc !important; color: white !important;');
+               }
+               
+               // הוספת התוכן המעובד
+               output += content;
+               
+               // סגירת התגית
+               output += '\n</div>';
+               
+               return output;
+           }
 
-                // לצורך בדיקה, הדפס את ה-HTML המעובד לקונסול
-                console.log("HTML מעובד שנשלח:", processedHtml);
+           // לפני שליחת הטופס, שמור את התוכן HTML בשדה המוסתר
+           form.addEventListener('submit', function(e) {
+               // שמירת התוכן HTML בשדה מוסתר עם שמירה על מאפייני יישור והצבעים
+               const htmlContent = quill.root.innerHTML;
 
-                // בדיקת תקינות הטופס
-                if (!form.checkValidity() || quill.getText().trim().length === 0) {
-                    e.preventDefault();
+               // שימוש בפונקציה החדשה ליצירת פלט מעוצב
+               const preparedHtml = prepareHtmlBeforeProcessing(htmlContent);
+               const processedHtml = createFormattedOutput(preparedHtml);
+               
+               contentInput.value = processedHtml;
 
-                    // הצג הודעת שגיאה
-                    statusPopup.classList.remove('success');
-                    statusPopup.classList.add('error');
-                    statusPopup.querySelector('.status-title').textContent = 'שגיאה';
-                    statusPopup.querySelector('.status-message').textContent = 'אנא מלא את כל השדות המסומנים בכוכבית';
-                    statusOverlay.classList.add('active');
+               // הדפסת הקוד המעובד לקונסול - לצורכי בדיקה
+               console.log("HTML מעובד שנשלח:", processedHtml);
 
-                    return;
-                }
+               // בדיקת תקינות הטופס
+               if (!form.checkValidity() || quill.getText().trim().length === 0) {
+                   e.preventDefault();
 
-                // אם הטופס תקין
-                // הטופס נשלח ל-iframe מוסתר
-                setTimeout(function() {
-                    // הצגת חלון אישור
-                    statusPopup.classList.remove('error');
-                    statusPopup.classList.add('success');
-                    statusPopup.querySelector('.status-title').textContent = 'נשלח בהצלחה';
-                    statusPopup.querySelector('.status-message').textContent = 'דבר התורה נשלח בהצלחה ויוסף למאגר לאחר אישור.';
-                    statusOverlay.classList.add('active');
+                   // הצג הודעת שגיאה
+                   statusPopup.classList.remove('success');
+                   statusPopup.classList.add('error');
+                   statusPopup.querySelector('.status-title').textContent = 'שגיאה';
+                   statusPopup.querySelector('.status-message').textContent = 'אנא מלא את כל השדות המסומנים בכוכבית';
+                   statusOverlay.classList.add('active');
 
-                    // איפוס הטופס
-                    form.reset();
-                    quill.setContents([]);
-                    document.getElementById('year').value = currentHebrewYear;
-                }, 1000);
-            });
-        });
+                   return;
+               }
 
-        // פונקציה לסגירת חלון האישור
-        function closeStatusPopup() {
-            document.getElementById('statusOverlay').classList.remove('active');
-        }
+               // אם הטופס תקין
+               // הטופס נשלח ל-iframe מוסתר
+               setTimeout(function() {
+                   // הצגת חלון אישור
+                   statusPopup.classList.remove('error');
+                   statusPopup.classList.add('success');
+                   statusPopup.querySelector('.status-title').textContent = 'נשלח בהצלחה';
+                   statusPopup.querySelector('.status-message').textContent = 'דבר התורה נשלח בהצלחה ויוסף למאגר לאחר אישור.';
+                   statusOverlay.classList.add('active');
 
-        // פונקציה לחישוב השנה העברית הנוכחית
-        function getHebrewYear() {
-            // החזרת תשפ״ה כברירת מחדל
-            return "תשפ״ה";
-        }
-    </script>
+                   // איפוס הטופס
+                   form.reset();
+                   quill.setContents([]);
+                   document.getElementById('year').value = currentHebrewYear;
+               }, 1000);
+           });
+       });
+
+       // פונקציה לסגירת חלון האישור
+       function closeStatusPopup() {
+           document.getElementById('statusOverlay').classList.remove('active');
+       }
+
+       // פונקציה לחישוב השנה העברית הנוכחית
+       function getHebrewYear() {
+           // החזרת תשפ״ה כברירת מחדל
+           return "תשפ״ה";
+       }
+   </script>
 </body>
 </html>

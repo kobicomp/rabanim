@@ -691,23 +691,77 @@
                 });
             });
 
-            // פונקציה לשימור מאפייני היישור בתוכן
+            // פונקציה משודרגת לשימור מאפייני העיצוב בתוכן ויצירת מבנה אחיד
             function preserveAlignment(html) {
-                // החלפת מחלקות CSS של Quill לאטריביוטים סגנון ישירים
-                // כדי לוודא שהיישור עובד בכל מקום
-                let processedHtml = html
-                    .replace(/<p class="ql-align-center">/g, '<p style="text-align: center;">')
-                    .replace(/<p class="ql-align-right">/g, '<p style="text-align: right;">')
-                    .replace(/<p class="ql-align-left">/g, '<p style="text-align: left;">')
-                    .replace(/<p class="ql-align-justify">/g, '<p style="text-align: justify;">');
-
-                // טיפול במקרים בהם יש מספר מחלקות
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-center([^"]*)"/g, 'class="$1$2" style="text-align: center;"');
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-center([^"]*)"/g, 'class="$1$2" style="text-align: center;"');
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-right([^"]*)"/g, 'class="$1$2" style="text-align: right;"');
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-left([^"]*)"/g, 'class="$1$2" style="text-align: left;"');
-                processedHtml = processedHtml.replace(/class="([^"]*)ql-align-justify([^"]*)"/g, 'class="$1$2" style="text-align: justify;"');
-
+                // ראשית, נבדוק אם יש תוכן
+                if (!html || html.trim() === '') return '';
+                
+                // נרכיב את המעטפת של התוכן העשיר
+                let processedHtml = '<div class="rich-text-content color-forced">\n';
+                
+                // נוסיף סגנונות CSS מובנים לאכיפת צבעים
+                processedHtml += '<style>\n';
+                processedHtml += '/* סגנונות מקומיים לאכיפת צבעים */\n';
+                processedHtml += '.color-blue { color: #0066cc !important; }\n';
+                processedHtml += '.color-red { color: #ff0000 !important; }\n';
+                processedHtml += '.color-green { color: #008000 !important; }\n';
+                processedHtml += '.color-purple { color: #800080 !important; }\n';
+                processedHtml += '.color-orange { color: #ff6600 !important; }\n';
+                processedHtml += '.bg-yellow { background-color: #ffff00 !important; }\n';
+                processedHtml += '.bg-lightblue { background-color: #add8e6 !important; }\n';
+                processedHtml += '.bg-lightgreen { background-color: #90ee90 !important; }\n';
+                processedHtml += '.bg-pink { background-color: #ffc0cb !important; }\n';
+                processedHtml += '</style>\n';
+                
+                // החלפת מחלקות יישור של Quill לאטריביוטים סגנון ישירים עם מחלקות
+                let content = html
+                    // יישור למרכז
+                    .replace(/<p class="ql-align-center">/g, '<p class="ql-align-center" style="text-align: center !important;" align="center">')
+                    // יישור לימין
+                    .replace(/<p class="ql-align-right">/g, '<p class="ql-align-right" style="text-align: right !important;" align="right">')
+                    // יישור לשמאל
+                    .replace(/<p class="ql-align-left">/g, '<p class="ql-align-left" style="text-align: left !important;" align="left">')
+                    // יישור מלא
+                    .replace(/<p class="ql-align-justify">/g, '<p class="ql-align-justify" style="text-align: justify !important;" align="justify">');
+                
+                // טיפול במצב שיש סגנון יישור ישיר בלי המחלקה
+                content = content
+                    .replace(/<p style="text-align: center;/g, '<p class="ql-align-center" style="text-align: center !important;')
+                    .replace(/<p style="text-align: right;/g, '<p class="ql-align-right" style="text-align: right !important;')
+                    .replace(/<p style="text-align: left;/g, '<p class="ql-align-left" style="text-align: left !important;')
+                    .replace(/<p style="text-align: justify;/g, '<p class="ql-align-justify" style="text-align: justify !important;');
+                
+                // טיפול בצבעים - החלפת סגנון צבע ישיר למחלקות צבע
+                content = content
+                    // צבעי טקסט
+                    .replace(/<span style="color: rgb\(0, 0, 255\);/g, '<span class="color-blue" style="color: #0066cc !important;')
+                    .replace(/<span style="color: rgb\(0, 102, 204\);/g, '<span class="color-blue" style="color: #0066cc !important;')
+                    .replace(/<span style="color: rgb\(255, 0, 0\);/g, '<span class="color-red" style="color: #ff0000 !important;')
+                    .replace(/<span style="color: rgb\(230, 0, 0\);/g, '<span class="color-red" style="color: #ff0000 !important;')
+                    .replace(/<span style="color: rgb\(0, 128, 0\);/g, '<span class="color-green" style="color: #008000 !important;')
+                    .replace(/<span style="color: rgb\(0, 138, 0\);/g, '<span class="color-green" style="color: #008000 !important;')
+                    .replace(/<span style="color: rgb\(128, 0, 128\);/g, '<span class="color-purple" style="color: #800080 !important;')
+                    .replace(/<span style="color: rgb\(255, 102, 0\);/g, '<span class="color-orange" style="color: #ff6600 !important;')
+                    
+                    // צבעי רקע
+                    .replace(/<span style="background-color: rgb\(255, 255, 0\);/g, '<span class="bg-yellow" style="background-color: #ffff00 !important;')
+                    .replace(/<span style="background-color: rgb\(173, 216, 230\);/g, '<span class="bg-lightblue" style="background-color: #add8e6 !important;')
+                    .replace(/<span style="background-color: rgb\(144, 238, 144\);/g, '<span class="bg-lightgreen" style="background-color: #90ee90 !important;')
+                    .replace(/<span style="background-color: rgb\(255, 192, 203\);/g, '<span class="bg-pink" style="background-color: #ffc0cb !important;');
+                
+                // החלפת מחלקות צבע של Quill למחלקות שלנו
+                content = content
+                    .replace(/<span class="ql-color-red/g, '<span class="color-red')
+                    .replace(/<span class="ql-color-blue/g, '<span class="color-blue')
+                    .replace(/<span class="ql-color-green/g, '<span class="color-green')
+                    .replace(/<span class="ql-background-yellow/g, '<span class="bg-yellow');
+                
+                // הוספת התוכן המעובד
+                processedHtml += content;
+                
+                // סגירת המעטפת
+                processedHtml += '\n</div>';
+                
                 return processedHtml;
             }
 
@@ -716,9 +770,12 @@
                 // שמירת התוכן HTML בשדה מוסתר עם שמירה על מאפייני יישור
                 const htmlContent = quill.root.innerHTML;
 
-                // וידוא שמאפייני היישור נשמרים כראוי
+                // וידוא שמאפייני היישור והצבעים נשמרים כראוי
                 const processedHtml = preserveAlignment(htmlContent);
                 contentInput.value = processedHtml;
+
+                // לצורך בדיקה, הדפס את ה-HTML המעובד לקונסול
+                console.log("HTML מעובד שנשלח:", processedHtml);
 
                 // בדיקת תקינות הטופס
                 if (!form.checkValidity() || quill.getText().trim().length === 0) {

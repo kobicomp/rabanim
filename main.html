@@ -480,7 +480,198 @@
             background-color: var(--primary-color);
             color: white;
         }
+/* ===== סגנונות חדשים לתמיכה בתוכן עשיר ===== */
 
+/* צבעי טקסט */
+.content-body [style*="color: rgb("],
+.content-body [style*="color:rgb("],
+.content-body [style*="color: #"],
+.content-body [style*="color:#"],
+.content-body span[style*="color:"],
+.content-body span[style*="color: "] {
+    color: inherit !important; /* שמירה על הצבע המקורי מה-style */
+}
+
+/* צבעי רקע */
+.content-body [style*="background-color: rgb("],
+.content-body [style*="background-color:rgb("],
+.content-body [style*="background-color: #"],
+.content-body [style*="background-color:#"],
+.content-body span[style*="background-color:"],
+.content-body span[style*="background-color: "] {
+    background-color: inherit !important; /* שמירה על הצבע המקורי מה-style */
+}
+
+/* צבעים ספציפיים */
+/* אדום */
+.content-body [style*="color: red"],
+.content-body [style*="color:red"],
+.content-body span[style*="color: rgb(255, 0, 0)"],
+.content-body span[style*="color: rgb(230, 0, 0)"],
+.content-body span[style*="color: #ff0000"],
+.content-body span.ql-color-red,
+.content-body span.color-red {
+    color: #ff0000 !important;
+}
+
+/* כחול */
+.content-body [style*="color: blue"],
+.content-body [style*="color:blue"],
+.content-body span[style*="color: rgb(0, 0, 255)"],
+.content-body span[style*="color: rgb(0, 102, 204)"],
+.content-body span[style*="color: #0000ff"],
+.content-body span[style*="color: #0066cc"],
+.content-body span.ql-color-blue,
+.content-body span.color-blue {
+    color: #0066cc !important;
+}
+
+/* ירוק */
+.content-body [style*="color: green"],
+.content-body [style*="color:green"],
+.content-body span[style*="color: rgb(0, 128, 0)"],
+.content-body span[style*="color: rgb(0, 138, 0)"],
+.content-body span[style*="color: #008000"],
+.content-body span.ql-color-green,
+.content-body span.color-green {
+    color: #008000 !important;
+}
+
+/* סגול */
+.content-body [style*="color: purple"],
+.content-body [style*="color:purple"],
+.content-body span[style*="color: rgb(128, 0, 128)"],
+.content-body span[style*="color: rgb(153, 51, 255)"],
+.content-body span[style*="color: #800080"],
+.content-body span[style*="color: #9933ff"],
+.content-body span.ql-color-purple,
+.content-body span.color-purple,
+.content-body span.color-purple-light {
+    color: #800080 !important;
+}
+
+/* כתום */
+.content-body [style*="color: orange"],
+.content-body [style*="color:orange"],
+.content-body span[style*="color: rgb(255, 165, 0)"],
+.content-body span[style*="color: rgb(255, 102, 0)"],
+.content-body span[style*="color: #ffa500"],
+.content-body span[style*="color: #ff6600"],
+.content-body span.ql-color-orange,
+.content-body span.color-orange {
+    color: #ff6600 !important;
+}
+
+/* צהוב */
+.content-body [style*="color: yellow"],
+.content-body [style*="color:yellow"],
+.content-body span[style*="color: rgb(255, 255, 0)"],
+.content-body span[style*="color: #ffff00"],
+.content-body span.ql-color-yellow {
+    color: #806600 !important; /* צהוב כהה יותר לקריאות */
+}
+
+/* רקע צהוב */
+.content-body [style*="background-color: yellow"],
+.content-body [style*="background-color:yellow"],
+.content-body span[style*="background-color: rgb(255, 255, 0)"],
+.content-body span[style*="background-color: #ffff00"],
+.content-body span.ql-background-yellow,
+.content-body span.bg-yellow {
+    background-color: #ffff00 !important;
+}
+
+/* רקע כחול בהיר */
+.content-body [style*="background-color: lightblue"],
+.content-body [style*="background-color:lightblue"],
+.content-body span[style*="background-color: rgb(173, 216, 230)"],
+.content-body span[style*="background-color: #add8e6"],
+.content-body span.bg-lightblue {
+    background-color: #add8e6 !important;
+}
+
+/* רקע ירוק בהיר */
+.content-body [style*="background-color: lightgreen"],
+.content-body [style*="background-color:lightgreen"],
+.content-body span[style*="background-color: rgb(144, 238, 144)"],
+.content-body span[style*="background-color: #90ee90"],
+.content-body span.bg-lightgreen {
+    background-color: #90ee90 !important;
+}
+
+/* רקע ורוד */
+.content-body [style*="background-color: pink"],
+.content-body [style*="background-color:pink"],
+.content-body span[style*="background-color: rgb(255, 192, 203)"],
+.content-body span[style*="background-color: #ffc0cb"],
+.content-body span.bg-pink {
+    background-color: #ffc0cb !important;
+}
+
+/* רקע כחול כהה */
+.content-body span[style*="background-color: rgb(0, 102, 204)"],
+.content-body span[style*="background-color: #0066cc"],
+.content-body span.bg-blue-dark {
+    background-color: #0066cc !important;
+    color: white !important; /* להבטיח קריאות */
+}
+
+/* סגנונות מיוחדים לתוכן מהטופס המשודרג */
+.content-body .rich-text-content .color-blue,
+.content-body .color-forced .color-blue { 
+    color: #0066cc !important; 
+}
+
+.content-body .rich-text-content .color-red,
+.content-body .color-forced .color-red { 
+    color: #ff0000 !important; 
+}
+
+.content-body .rich-text-content .color-green,
+.content-body .color-forced .color-green { 
+    color: #008000 !important; 
+}
+
+.content-body .rich-text-content .color-purple,
+.content-body .color-forced .color-purple { 
+    color: #800080 !important; 
+}
+
+.content-body .rich-text-content .color-purple-light,
+.content-body .color-forced .color-purple-light { 
+    color: #9933ff !important; 
+}
+
+.content-body .rich-text-content .color-orange,
+.content-body .color-forced .color-orange { 
+    color: #ff6600 !important; 
+}
+
+.content-body .rich-text-content .bg-yellow,
+.content-body .color-forced .bg-yellow { 
+    background-color: #ffff00 !important; 
+}
+
+.content-body .rich-text-content .bg-lightblue,
+.content-body .color-forced .bg-lightblue { 
+    background-color: #add8e6 !important; 
+}
+
+.content-body .rich-text-content .bg-lightgreen,
+.content-body .color-forced .bg-lightgreen { 
+    background-color: #90ee90 !important; 
+}
+
+.content-body .rich-text-content .bg-pink,
+.content-body .color-forced .bg-pink { 
+    background-color: #ffc0cb !important; 
+}
+
+.content-body .rich-text-content .bg-blue-dark,
+.content-body .color-forced .bg-blue-dark { 
+    background-color: #0066cc !important;
+    color: white !important;
+}
         /* ===== סגנונות חדשים לתמיכה בתוכן עשיר ===== */
 
         /* תמיכה בצבעים שמגיעים מהטופס - חשוב: תגים עם צבע ישירים */
